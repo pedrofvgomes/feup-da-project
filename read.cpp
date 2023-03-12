@@ -20,6 +20,7 @@ using namespace std;
  */
 
 string correct(string& s){
+    if(s.empty()) return s;
     string current = "";
     for(int i=0; i<s.size()-1; i++) {
         if (s[i] == -61) {
@@ -42,7 +43,7 @@ string correct(string& s){
             if (s[i + 1] == -83)
                 current += "i";
             // O
-            if (s[i + 1] == -109 || s[i + 1] == -77)
+            if (s[i + 1] == -109 || s[i + 1] == -107)
                 current += "O";
             // o
             if (s[i + 1] == -77 || s[i + 1] == -75)
@@ -70,6 +71,7 @@ vector<string> split(string& s){
 }
 
 map<string, Station> readstations(){
+    int counter = 0;
     map<string, Station> stations;
     ifstream file;
     string l;
@@ -90,7 +92,7 @@ map<string, Station> readstations(){
         line = correct(s[4]);
 
         stations[name] = Station(name, district, municipality, township, line);
-
+        cout << name << endl;
         getline(file, l);
     }
     file.close();
