@@ -4,7 +4,5 @@ using namespace std;
 
 int main(){
     auto stations = readstations();
-    for(auto &i:stations) {
-        cout << i.first << endl;
-    }
+    for(auto &i : stations) cout << i.first << endl;
 }

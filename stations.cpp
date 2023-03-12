@@ -15,7 +15,7 @@ Station::Station(string name, string district, string municipality, string towns
 }
 
 string Station::getname() {return name;}
-string Station::getmunicipality() {return municipality;}
 string Station::getdistrict() {return district;}
+string Station::getmunicipality() {return municipality;}
 string Station::gettownship() {return township;}
 string Station::getline() {return line;}
