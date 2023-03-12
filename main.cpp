@@ -1,6 +1,10 @@
 #include <iostream>
+#include "read.cpp"
 using namespace std;
 
 int main(){
-    cout << "hello world";
+    auto stations = readstations();
+    for(auto &i:stations) {
+        cout << i.first << endl;
+    }
 }
