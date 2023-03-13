@@ -25,10 +25,10 @@ string correct(string& s){
     for(int i=0; i<s.size()-1; i++) {
         if (s[i] == -61) {
             // A
-            if (s[i + 1] == -127 || s[i + 1] == -125 || s[i + 1] == -128)
+            if (s[i + 1] == -125 || s[i+1] ==-126 || s[i + 1] == -127 || s[i+1] == -128)
                 current += "A";
             // a
-            if (s[i + 1] == -95 || s[i + 1] == -93 || s[i + 1] == -96)
+            if (s[i + 1] == -93 || s[i + 1] == -94 || s[i + 1] == -95 || s[i + 1] == -96)
                 current += "a";
             // E
             if (s[i + 1] == -119 || s[i + 1] == -118)
@@ -92,7 +92,6 @@ map<string, Station> readstations(){
         line = correct(s[4]);
 
         stations[name] = Station(name, district, municipality, township, line);
-        cout << name << endl;
         getline(file, l);
     }
     file.close();
