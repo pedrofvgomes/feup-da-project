@@ -1,5 +1,6 @@
 #include <iostream>
-#include "read.cpp"
+#include "src/read.cpp"
+
 using namespace std;
 
 int main(){
