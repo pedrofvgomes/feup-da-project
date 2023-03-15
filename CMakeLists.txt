@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.23)
 project(Railway_Network_Manager)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Railway_Network_Manager code/src/main.cpp code/src/Station.cpp code/include/Station.h code/src/Connection.cpp code/include/Connection.h code/src/Network.cpp code/include/Network.h)
+add_executable(Railway_Network_Manager main.cpp src/station.cpp src/station.h src/connection.cpp src/connection.h src/network.cpp src/network.h)
 
 # first we can indicate the documentation build as an option and set it to ON by default
 option(BUILD_DOC "Build documentation" ON)
