@@ -1,4 +1,4 @@
-#include "stations.h"
+#include "station.h"
 #include <string>
 using namespace std;
 
@@ -14,8 +14,8 @@ Station::Station(string name, string district, string municipality, string towns
     this->line = line;
 }
 
-string Station::getname() {return name;}
-string Station::getdistrict() {return district;}
-string Station::getmunicipality() {return municipality;}
-string Station::gettownship() {return township;}
-string Station::getline() {return line;}
+string Station::getName() {return name;}
+string Station::getDistrict() {return district;}
+string Station::getMunicipality() {return municipality;}
+string Station::getTownship() {return township;}
+string Station::getLine() {return line;}
