@@ -3,7 +3,7 @@ project(Railway_Network_Manager)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Railway_Network_Manager main.cpp src/station.cpp src/station.h src/connection.cpp src/connection.h src/network.cpp src/network.h)
+add_executable(Railway_Network_Manager main.cpp src/Station.cpp src/Station.h src/Connection.cpp src/Connection.h src/Network.cpp src/Network.h)
 
 # first we can indicate the documentation build as an option and set it to ON by default
 option(BUILD_DOC "Build documentation" ON)

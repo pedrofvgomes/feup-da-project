@@ -1,13 +1,12 @@
+#include "src/Network.h"
 #include <iostream>
-#include "src/read.cpp"
-
-using namespace std;
 
 int main(){
-    vector<string> v = {"Â","â","Á", "á", "Ã", "ã", "À", "à", "É", "é", "Ê", "ê", "Í", "í", "Ó", "ó", "Õ", "õ", "Ú", "ú"};
 
-    auto stations = readstations();
+    Network railway;
 
-    string c = "çÇ";
-    cout << c[0][0] << c[0][1]
+    cout << railway.readStations("../data/stations.csv") << endl;
+    cout << railway.readConnections("../data/network.csv") << endl;
+
+    return 0;
 }
