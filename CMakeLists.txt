@@ -7,4 +7,4 @@ include_directories(.)
 
 add_executable(feup_da_project
         main.cpp
-        stations.h)
+        station.h)

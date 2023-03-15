@@ -1,4 +1,4 @@
-#include <stations.cpp>
+#include <station.cpp>
 #include <map>
 #include <fstream>
 #include <vector>
@@ -6,12 +6,12 @@
 using namespace std;
 
 /* characters to correct
- * Á, á, Ã, ã, À, à
+ * Á, á, Â, â, Ã, ã, À, à
  * É, é, Ê, ê
  * Í, í
  * Ó, ó, Õ, õ
  * Ú, ú
- *
+ * Ç, ç
  * each one is actually interpreted as 2 characters,
  * and the code of the first one is always -61
  * the function below finds the code -61 then manually
@@ -21,14 +21,14 @@ using namespace std;
 
 string correct(string& s){
     if(s.empty()) return s;
-    string current = "";
+    string current;
     for(int i=0; i<s.size()-1; i++) {
         if (s[i] == -61) {
             // A
-            if (s[i + 1] == -127 || s[i + 1] == -125 || s[i + 1] == -128)
+            if (s[i + 1] == -125 || s[i+1] ==-126 || s[i + 1] == -127 || s[i+1] == -128)
                 current += "A";
             // a
-            if (s[i + 1] == -95 || s[i + 1] == -93 || s[i + 1] == -96)
+            if (s[i + 1] == -93 || s[i + 1] == -94 || s[i + 1] == -95 || s[i + 1] == -96)
                 current += "a";
             // E
             if (s[i + 1] == -119 || s[i + 1] == -118)
@@ -60,12 +60,28 @@ string correct(string& s){
 }
 
 vector<string> split(string& s){
-    vector<string> result;
+    vector<string> result, result2;
     stringstream sstream(s);
     while(sstream.good()){
         string sub;
         getline(sstream,sub,',');
         result.push_back(sub);
+    }
+    // correct commas that don't count
+    int found = 0;
+    for(auto i: result){
+        string current;
+        for(auto c : i){
+            if(c=='"'){
+                if(found==0) found=1;
+                else {
+                    current+=i;
+                    found=0;
+                }
+            }
+            if(current.empty()) result2.push_back(i);
+            else if(found==0) result.push_back(current);
+        }
     }
     return result;
 }
@@ -92,7 +108,6 @@ map<string, Station> readstations(){
         line = correct(s[4]);
 
         stations[name] = Station(name, district, municipality, township, line);
-        cout << name << endl;
         getline(file, l);
     }
     file.close();
