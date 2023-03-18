@@ -1,14 +1,14 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.20)
 project(Railway_Network_Manager)
 
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(Railway_Network_Manager main.cpp src/Station.cpp src/Station.h src/Connection.cpp src/Connection.h src/Network.cpp src/Network.h)
 
-# first we can indicate the documentation build as an option and set it to ON by default
+# Doxygen Build
+
 option(BUILD_DOC "Build documentation" ON)
 
-# Doxygen Build
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
     set(BUILD_DOC_DIR "${CMAKE_SOURCE_DIR}/docs/output")

@@ -1,22 +1,24 @@
-#ifndef FEUP_DA_PROJECT_CONNECTION_H
-#define FEUP_DA_PROJECT_CONNECTION_H
+#ifndef CONNECTION_H
+#define CONNECTION_H
 
 #include <string>
-using namespace std;
 
 class Connection {
 public:
-    Connection(string source, string destination, unsigned int capacity, string service);
-    string getSource();
-    string getDestination();
-    unsigned int getCapacity();
-    string getService();
-
-protected:
-    string source;
-    string destination;
+    Connection(std::string &src, std::string &dest, unsigned int cap, std::string &service);
+    const std::string &getSource() const;
+    const std::string &getDestination() const;
+    unsigned int getCapacity() const;
+    const std::string &getService() const;
+    void setSource(const std::string &src);
+    void setDestination(const std::string &dest);
+    void setCapacity(unsigned int cap);
+    void setService(const std::string &service);
+private:
+    std::string source;
+    std::string destination;
     unsigned int capacity;
-    string service;
+    std::string service;
 };
 
-#endif
+#endif //CONNECTION_H

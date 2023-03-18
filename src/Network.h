@@ -1,22 +1,23 @@
-#ifndef FEUP_DA_PROJECT_NETWORK_H
-#define FEUP_DA_PROJECT_NETWORK_H
+#ifndef NETWORK_H
+#define NETWORK_H
 
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
+
 #include "Station.h"
-using namespace std;
+#include "Connection.h"
 
 class Network {
 public:
-    unordered_map<string, Station> getStations();
-    void addStation(Station newStation);
-    void addConnection(Connection newConnection);
-
-    int readStations(string fileLocation);
-    int readConnections(string fileLocation);
-
-protected:
-    unordered_map<string, Station> stations;
+    Network();
+    const std::unordered_map<std::string, Station> &getStations() const;
+    void setStations(const std::unordered_map<std::string, Station> &stations);
+    void addStation(const Station& newStation);
+    void addConnection(const Connection& newConnection);
+    int readStations(const std::string& fileLocation);
+    int readConnections(const std::string& fileLocation);
+private:
+    std::unordered_map<std::string, Station> stations;
 };
 
-#endif
+#endif //NETWORK_H
