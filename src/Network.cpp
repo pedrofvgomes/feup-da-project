@@ -1,21 +1,28 @@
 #include "Network.h"
+
 #include <fstream>
 #include <iostream>
-#include <string>
 
 using namespace std;
 
-unordered_map<string, Station> Network::getStations() {return stations;}
+// -------------------- Constructor -------------------- //
 
-void Network::addStation(Station station) {
+Network::Network() {
+    cout << readStations("../data/stations.csv") << endl;
+    cout << readConnections("../data/network.csv") << endl;
+}
+
+// ---------------------- Methods ---------------------- //
+
+void Network::addStation(const Station& station) {
     stations.insert(make_pair(station.getName(), station));
 }
 
-void Network::addConnection(Connection newConnection) {
-    stations[newConnection.getSource()].addConnection(newConnection);
+void Network::addConnection(const Connection& newConnection) {
+    stations.find(newConnection.getSource())->second.addConnection(newConnection);
 }
 
-int Network::readStations(string fileLocation) {
+int Network::readStations(const string& fileLocation) {
 
     fstream file;
     file.open(fileLocation, ios::in);
@@ -47,7 +54,7 @@ int Network::readStations(string fileLocation) {
     return n;
 }
 
-int Network::readConnections(string fileLocation) {
+int Network::readConnections(const string& fileLocation) {
 
     fstream file;
     file.open(fileLocation, ios::in);
@@ -68,7 +75,7 @@ int Network::readConnections(string fileLocation) {
         getline(file, Capacity, ',');
         getline(file, Service);
 
-        stations[Source].addConnection({Source, Destination, static_cast<unsigned int>(stoul(Capacity)), Service});
+        stations.find(Source)->second.addConnection({Source, Destination, static_cast<unsigned int>(stoul(Capacity)), Service});
 
         n++;
     }
@@ -76,3 +83,16 @@ int Network::readConnections(string fileLocation) {
     return n;
 }
 
+// ---------------------- Getters ---------------------- //
+
+const unordered_map<std::string, Station> &Network::getStations() const {
+    return stations;
+}
+
+// ---------------------- Setters ---------------------- //
+
+void Network::setStations(const unordered_map<std::string, Station> &unorderedMap) {
+    Network::stations = unorderedMap;
+}
+
+// -------------------- END OF FILE -------------------- //
