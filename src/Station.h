@@ -8,6 +8,7 @@
 
 class Station {
 public:
+    Station();
     Station(std::string &name, std::string &district, std::string &municipality, std::string &township, std::string &line);
     const std::string &getName() const;
     const std::string &getDistrict() const;
@@ -15,6 +16,7 @@ public:
     const std::string &getTownship() const;
     const std::string &getLine() const;
     const std::vector<Connection> &getConnections() const;
+    const bool isVisited();
     void setName(const std::string &name);
     void setDistrict(const std::string &district);
     void setMunicipality(const std::string &municipality);
@@ -22,6 +24,7 @@ public:
     void setLine(const std::string &line);
     void setConnections(const std::vector<Connection> &connections);
     void addConnection(const Connection& newConnection);
+    void setVisited(bool status);
 private:
     std::string name;
     std::string district;
@@ -30,7 +33,7 @@ private:
     std::string line;
     std::vector<Connection> connections;
 
-    bool isVisited = false;
+    bool visited = false;
 };
 
 #endif // STATION_H

@@ -16,6 +16,8 @@ public:
     void addConnection(const Connection& newConnection);
     int readStations(const std::string& fileLocation);
     int readConnections(const std::string& fileLocation);
+
+    void dfs(std::string& s);
 private:
     std::unordered_map<std::string, Station> stations;
 };
