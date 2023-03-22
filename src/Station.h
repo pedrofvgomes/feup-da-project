@@ -29,6 +29,8 @@ private:
     std::string township;
     std::string line;
     std::vector<Connection> connections;
+
+    bool isVisited = false;
 };
 
 #endif // STATION_H
