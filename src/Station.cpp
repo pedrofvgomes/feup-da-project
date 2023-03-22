@@ -4,6 +4,15 @@ using namespace std;
 
 // -------------------- Constructor -------------------- //
 
+Station::Station() {
+    this->name = "";
+    this->district = "";
+    this->municipality = "";
+    this->township = "";
+    this->line = "";
+    this->connections = vector<Connection>();
+}
+
 Station::Station(std::string &n, std::string &dis, std::string &mun, std::string &town, std::string &li) {
     this->name = n;
     this->district = dis;
@@ -45,6 +54,10 @@ const vector<Connection> &Station::getConnections() const {
     return connections;
 }
 
+const bool Station::isVisited() {
+    return visited;
+}
+
 // ---------------------- Setters ---------------------- //
 
 void Station::setName(const string &n) {
@@ -69,6 +82,10 @@ void Station::setLine(const string &li) {
 
 void Station::setConnections(const vector<Connection> &v) {
     Station::connections = v;
+}
+
+void Station::setVisited(bool status){
+    this->visited = status;
 }
 
 // -------------------- END OF FILE -------------------- //
