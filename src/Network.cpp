@@ -8,8 +8,7 @@ using namespace std;
 // -------------------- Constructor -------------------- //
 
 Network::Network() {
-    cout << readStations("../data/stations.csv") << endl;
-    cout << readConnections("../data/network.csv") << endl;
+    stations = unordered_map<std::string, Station>();
 }
 
 // ---------------------- Methods ---------------------- //
@@ -22,10 +21,15 @@ void Network::addConnection(const Connection& newConnection) {
     stations.find(newConnection.getSource())->second.addConnection(newConnection);
 }
 
+void Network::createNetwork(const string &path) {
+    cout << endl << readStations(path)
+         << endl << readConnections(path);
+}
+
 int Network::readStations(const string& fileLocation) {
 
     fstream file;
-    file.open(fileLocation, ios::in);
+    file.open(fileLocation + "stations.csv", ios::in);
     if (!file.is_open()) {
         cout << "ERROR - The function \"readStations\" could not read the data" << endl;
         return 0;
@@ -57,7 +61,7 @@ int Network::readStations(const string& fileLocation) {
 int Network::readConnections(const string& fileLocation) {
 
     fstream file;
-    file.open(fileLocation, ios::in);
+    file.open(fileLocation + "network.csv", ios::in);
     if (!file.is_open()) {
         cout << "ERROR - The function \"readConnections\" could not read the data" << endl;
         return 0;

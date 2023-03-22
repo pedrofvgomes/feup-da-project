@@ -3,7 +3,7 @@ project(Railway_Network_Manager)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Railway_Network_Manager main.cpp src/Station.cpp src/Station.h src/Connection.cpp src/Connection.h src/Network.cpp src/Network.h)
+add_executable(Railway_Network_Manager main.cpp src/Menu.cpp src/Menu.h src/Station.cpp src/Station.h src/Connection.cpp src/Connection.h src/Network.cpp src/Network.h)
 
 # Doxygen Build
 

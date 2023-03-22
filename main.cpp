@@ -1,6 +1,6 @@
-#include "src/Network.h"
+#include "src/Menu.h"
 
 int main() {
-    Network railway;
+    Menu menu;
     return 0;
 }
