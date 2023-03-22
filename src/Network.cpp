@@ -37,12 +37,23 @@ int Network::readStations(const string& fileLocation) {
     string Municipality;
     string Township;
     string Line;
+    string temp;
 
     getline(file, Name); // Skip fist line
     while (getline(file, Name, ',')) {
         getline(file, District, ',');
         getline(file, Municipality, ',');
         getline(file, Township, ',');
+
+        if(Township[0] == '"'){
+            getline(file, temp, '"');
+            Township += "," + temp;
+            temp = "";
+            for(int i=1; i<Township.size()-1; i++){
+                temp+=Township[i];
+            }
+        }
+
         getline(file, Line);
 
         stations.insert(make_pair(Name, Station(Name, District, Municipality, Township, Line)));
