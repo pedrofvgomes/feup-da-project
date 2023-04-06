@@ -152,6 +152,8 @@ void Menu::setUpPrinter(int flag) {
         case 3:
             cout << endl << "   ALFA PENDULAR service : ";
             break;
+        default:
+            throw invalid_argument("Invalid option selected.");
     }
 }
 
@@ -287,10 +289,10 @@ void Menu::basicMaxFlowIntireGrid() { //TODO
 // ----------------- Cost Optimization ----------------- //
 
 void Menu::costOptimizationMenu() { //TODO
-
+    costOptimizationMenuPrinter();
 }
 
-void Menu::costOptimizationMenuPrinter(int flag) { //TODO
+void Menu::costOptimizationMenuPrinter() { //TODO
 
 }
 
@@ -415,7 +417,7 @@ bool Menu::confirmChoice() {
 }
 
 bool Menu::isStationOutputSafe(Station* stationptr) {
-    return stationptr->getMunicipality() != "" && stationptr->getDistrict() != "";
+    return !stationptr->getMunicipality().empty() && !stationptr->getDistrict().empty();
 }
 
 // -------------------- END OF FILE -------------------- //

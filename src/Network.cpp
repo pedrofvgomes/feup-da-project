@@ -4,14 +4,14 @@
 #include <iostream>
 #include <queue>
 #include <algorithm>
-#include <iostream>
-#include <limits>
+
+using namespace std;
 
 // -------------------- Constructor -------------------- //
 
 Network::Network() {
     trainPrices = pair<int,int>(-1,-1);
-    stations = unordered_map<std::string, Station>();
+    stations = vector<Station*>();
 }
 
 // ---------------------- Methods ---------------------- //
@@ -152,13 +152,8 @@ unsigned int Network::readConnections(const std::string &fileLocation) {
 }
 
 bool Network::doesStationExist(const std::string& input, Station*& stationPtr) {
-    auto it = stations.find(input);
-    if (it != stations.end()) {
-        stationPtr = &(it->second);
-        return true;
-    }
-    stationPtr = nullptr;
-    return false;
+    stationPtr = findStation(input);
+    return stationPtr == nullptr ? false : true;
 }
 
 Station * Network::findStation(std::string name) {
@@ -331,10 +326,22 @@ unsigned int Network::maxTrainsToStation(std::string station) {
 
 // ---------------------- Getters ---------------------- //
 
+const std::pair<int, int> &Network::getTrainPrices() const {
+    return trainPrices;
+}
 
+const std::vector<Station *> &Network::getStations() const {
+    return stations;
+}
 
 // ---------------------- Setters ---------------------- //
 
+void Network::setTrainPrices(const std::pair<int, int> &trainPrices) {
+    Network::trainPrices = trainPrices;
+}
 
+void Network::setStations(const std::vector<Station *> &stations) {
+    Network::stations = stations;
+}
 
 // -------------------- END OF FILE -------------------- //

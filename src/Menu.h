@@ -63,7 +63,6 @@ public:
      */
     inline static void mainMenuOptions(bool isLoading);
 
-    
     void basicServiceMenu();
     inline static void basicServiceMenuPrinter();
     void basicMaxFlow();
@@ -71,10 +70,8 @@ public:
     void basicMostImportant();
     void basicMaxFlowIntireGrid();
 
-
-
     void costOptimizationMenu();
-    inline static void costOptimizationMenuPrinter(int flag);
+    inline static void costOptimizationMenuPrinter();
 
     void lineFailuresMenu();
     inline static void lineFailuresMenuPrinter();
@@ -85,28 +82,6 @@ public:
     static bool confirmChoice();
     inline static bool isStationOutputSafe(Station* stationptr);
 
-    /*
-
-    ///Helper method to take and validate a string input.
-    ///@return Returns the Airport code once it is provided with a valid input.
-    std::string findFlightEnterString();
-    ///Helper method to print the instructions of the "findFlightEnterString" function on the terminal.
-    static void findFlightEnterStringPrinter();
-    ///Helper method to take and validate a pair of coordinates.
-    ///@return Returns the Airport code once it is provided with a valid input.
-    std::string findFlightEnterCoordinates();
-    ///Helper method to print the instructions of the "findFlightEnterCoordinates" function on the terminal.
-    ///@param first A flag to indicate if it is the first time running the function.
-    static void findFlightEnterCoordinatesPrinter(bool first);
-    ///Helper method to take and validate a string input.
-    ///@param empty A flag to indicate if the output will be empty.
-    ///@return Returns a vector of Airline codes to be processed in another function.
-    std::vector<std::string> findFlightPickAirlines(bool empty);
-    ///Helper method to print the instructions of the "findFlightPickAirlinesPrinter" function on the terminal.
-    ///@param first A flag to indicate if it is the first time running the function.
-    static void findFlightPickAirlinesPrinter(bool first);
-
-    */
 
 private:
 

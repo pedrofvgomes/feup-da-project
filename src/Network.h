@@ -13,6 +13,11 @@ class Network {
 public:
     Network();
 
+    const std::pair<int, int> &getTrainPrices() const;
+    const std::vector<Station *> &getStations() const;
+    void setTrainPrices(const std::pair<int, int> &trainPrices);
+    void setStations(const std::vector<Station *> &stations);
+
     Station * findStation(const std::string &name) const;
     void addStation(const std::string &name, const std::string &district, const std::string &municipality, const std::string &township, const std::string &line);
     void addBidirectionalConnection(const std::string &source, const std::string &destination, unsigned int capacity, std::string service);

@@ -1,13 +1,15 @@
 #include "StationConnection.h"
 
+#include <utility>
+
 // -------------------- Constructor -------------------- //
 
 Station::Station(std::string name, std::string district, std::string municipality, std::string township, std::string line) {
-    Station::name = name;
-    Station::district = district;
-    Station::municipality = municipality;
-    Station::township = township;
-    Station::line = line;
+    Station::name = std::move(name);
+    Station::district = std::move(district);
+    Station::municipality = std::move(municipality);
+    Station::township = std::move(township);
+    Station::line = std::move(line);
 }
 
 
@@ -15,17 +17,18 @@ Connection::Connection(Station *origin, Station *destination, unsigned int capac
     Connection::origin = origin;
     Connection::destination = destination;
     Connection::capacity = capacity;
-    Connection::service = service;
+    Connection::service = std::move(service);
+    Connection::flow = 0;
 }
 
 Connection *Station::addConnection(Station *destination, int capacity, std::string service) {
-    auto newConnection = new Connection(this, destination, capacity, service);
+    auto newConnection = new Connection(this, destination, capacity, std::move(service));
     connections.push_back(newConnection);
     destination->incoming.push_back(newConnection);
     return newConnection;
 }
 
-void Station::addBidirectionalConnection(Station *destination, int capacity, std::string service) {
+void Station::addBidirectionalConnection(Station *destination, int capacity, const std::string& service) {
     auto newConnection = addConnection(destination, capacity, service);
     destination->addConnection(newConnection->getOrigin(), capacity, service);
 }
@@ -114,23 +117,23 @@ Connection *Connection::getReverse() const {
 
 
 // ---------------------- Setters ---------------------- //
-void Station::setName(std::string name) {
+void Station::setName(std::string& name) {
     Station::name = name;
 }
 
-void Station::setDistrict(std::string district) {
+void Station::setDistrict(std::string& district) {
     Station::district = district;
 }
 
-void Station::setMunicipality(std::string municipality) {
+void Station::setMunicipality(std::string& municipality) {
     Station::municipality = municipality;
 }
 
-void Station::setTownship(std::string township) {
+void Station::setTownship(std::string& township) {
     Station::township = township;
 }
 
-void Station::setLine(std::string line) {
+void Station::setLine(std::string& line) {
     Station::line = line;
 }
 

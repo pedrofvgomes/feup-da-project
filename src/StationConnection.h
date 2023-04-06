@@ -22,15 +22,15 @@ public:
     Connection * getPath() const;
     std::vector<Connection *> getIncoming() const;
 
-    void setName(std::string name);
-    void setDistrict(std::string district);
-    void setMunicipality(std::string municipality);
-    void setTownship(std::string township);
-    void setLine(std::string line);
+    void setName(std::string& name);
+    void setDistrict(std::string& district);
+    void setMunicipality(std::string& municipality);
+    void setTownship(std::string& township);
+    void setLine(std::string& line);
     void setVisited(bool visited);
     void setPath(Connection *path);
     Connection *addConnection(Station *destination, int capacity, std::string service);
-    void addBidirectionalConnection(Station *destination, int capacity, std::string service);
+    void addBidirectionalConnection(Station *destination, int capacity, const std::string& service);
     bool removeConnection(Station *destination);
 
 protected:
