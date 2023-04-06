@@ -8,6 +8,7 @@ using namespace std;
 // -------------------- Constructor -------------------- //
 
 Network::Network() {
+    trainPrices = pair<int,int>(-1,-1);
     stations = unordered_map<std::string, Station>();
 }
 
@@ -98,13 +99,31 @@ int Network::readConnections(const string& fileLocation) {
     return n;
 }
 
+bool Network::doesStationExist(const std::string& input, Station*& stationPtr) {
+    auto it = stations.find(input);
+    if (it != stations.end()) {
+        stationPtr = &(it->second);
+        return true;
+    }
+    stationPtr = nullptr;
+    return false;
+}
+
 // ---------------------- Getters ---------------------- //
+
+const pair<int, int> &Network::getTrainPrices() const {
+    return trainPrices;
+}
 
 const unordered_map<std::string, Station> &Network::getStations() const {
     return stations;
 }
 
 // ---------------------- Setters ---------------------- //
+
+void Network::setTrainPrices(const pair<int, int> &trainPrices) {
+    Network::trainPrices = trainPrices;
+}
 
 void Network::setStations(const unordered_map<std::string, Station> &unorderedMap) {
     Network::stations = unorderedMap;
