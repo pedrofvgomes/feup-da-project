@@ -243,17 +243,17 @@ unsigned int Network::edmondsKarp(std::string source, std::string target) {
     return maxFlow;
 }
 
+bool cmp(std::pair<std::string, unsigned int>& mun1, std::pair<std::string, unsigned int>& mun2) {
+    if (mun2.second == mun1.second) return mun1.first < mun2.first;
+    return mun2.second < mun1.second;
+}
+
 unsigned int stationCapacity(Station* station){
     unsigned int capacity = 0;
     for(auto &connection : station->getConnections()){
         capacity += connection->getCapacity();
     }
     return capacity;
-}
-
-bool cmp(std::pair<std::string, unsigned int>& mun1, std::pair<std::string, unsigned int>& mun2) {
-    if (mun2.second == mun1.second) return mun1.first < mun2.first;
-    return mun2.second > mun1.second;
 }
 
 std::vector<std::string> Network::topKMunicipalitiesByCapacity(unsigned int k) {
@@ -270,6 +270,29 @@ std::vector<std::string> Network::topKMunicipalitiesByCapacity(unsigned int k) {
     /* pass the map values to a vector, so it can be sorted differently, and sort it */
 
     for(auto &i : municipalityCapacity) sorted.emplace_back(i);
+    std::sort(sorted.begin(), sorted.end(), cmp);
+
+    /* top K municipalities' name */
+
+    for(int i=0; i<k; i++) topK.push_back(sorted[i].first);
+
+    return topK;
+}
+
+std::vector<std::string> Network::topKDistrictsByCapacity(unsigned int k) {
+    std::vector<std::string> topK;
+    std::map<std::string, unsigned int> districtCapacity;
+    std::vector<std::pair<std::string, unsigned int>> sorted;
+
+    /* calculate each district's total capacity */
+
+    for(auto &station : this->stations){
+        districtCapacity[station->getDistrict()] += stationCapacity(station);
+    }
+
+    /* pass the map values to a vector, so it can be sorted differently, and sort it */
+
+    for(auto &i : districtCapacity) sorted.emplace_back(i);
     std::sort(sorted.begin(), sorted.end(), cmp);
 
     /* top K municipalities' name */

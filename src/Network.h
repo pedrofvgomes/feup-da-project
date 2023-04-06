@@ -26,6 +26,7 @@ public:
     void augmentFlowAlongPath(Station *s, Station *t, unsigned int f);
     unsigned int edmondsKarp(std::string source, std::string target);
     std::vector<std::string> topKMunicipalitiesByCapacity(unsigned int k);
+    std::vector<std::string> topKDistrictsByCapacity(unsigned int k);
 
 private:
     std::vector<Station *> stations;
