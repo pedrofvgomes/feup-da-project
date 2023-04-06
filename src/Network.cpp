@@ -2,8 +2,10 @@
 
 #include <fstream>
 #include <iostream>
-
-using namespace std;
+#include <queue>
+#include <algorithm>
+#include <iostream>
+#include <limits>
 
 // -------------------- Constructor -------------------- //
 
@@ -13,13 +15,19 @@ Network::Network() {
 }
 
 // ---------------------- Methods ---------------------- //
-
-void Network::addStation(const Station& station) {
-    stations.insert(make_pair(station.getName(), station));
+Station *Network::findStation(const std::string &name) const {
+    for (auto station : stations) {
+        if (station->getName() == name) {
+            return station;
+        }
+    }
+    return nullptr;
 }
 
-void Network::addConnection(const Connection& newConnection) {
-    stations.find(newConnection.getSource())->second.addConnection(newConnection);
+void Network::addStation(const std::string &name, const std::string &district, const std::string &municipality,
+                         const std::string &township, const std::string &line) {
+
+    stations.push_back(new Station(name, district, municipality, township, line));
 }
 
 void Network::createNetwork(const string &path) {
@@ -27,22 +35,42 @@ void Network::createNetwork(const string &path) {
          << endl << readConnections(path);
 }
 
-int Network::readStations(const string& fileLocation) {
+void Network::addBidirectionalConnection(const std::string &source, const std::string &destination, unsigned int capacity, std::string service) {
+    // Finding the stations
+    Station * stationA = nullptr;
+    Station * stationB = nullptr;
+    for (auto station : stations) {
+        if (stationA != nullptr && stationB != nullptr) {
+            break;
+        }
+        if (station->getName() == source) {
+            stationA = station;
+        }
+        else if (station->getName() == destination) {
+            stationB = station;
+        }
+    }
 
-    fstream file;
+    stationA->addConnection(stationB, capacity, service);
+    stationB->addConnection(stationA, capacity, service);
+}
+
+unsigned int Network::readStations(const std::string &fileLocation) {
+
+    std::fstream file;
     file.open(fileLocation + "stations.csv", ios::in);
     if (!file.is_open()) {
-        cout << "ERROR - The function \"readStations\" could not read the data" << endl;
+        std::cout << "ERROR - The function \"readStations\" could not read the data" << std::endl;
         return 0;
     }
 
     int n = 0;
-    string Name;
-    string District;
-    string Municipality;
-    string Township;
-    string Line;
-    string temp;
+    std::string Name;
+    std::string District;
+    std::string Municipality;
+    std::string Township;
+    std::string Line;
+    std::string temp;
 
     getline(file, Name); // Skip fist line
     while (getline(file, Name, ',')) {
@@ -58,10 +86,19 @@ int Network::readStations(const string& fileLocation) {
                 temp+=Township[i];
             }
         }
-
         getline(file, Line);
 
-        stations.insert(make_pair(Name, Station(Name, District, Municipality, Township, Line)));
+        bool insert = true;
+        for (auto station : stations) {
+            if (station->getName() == Name) {
+                insert = false;
+                break;
+            }
+        }
+
+        if (insert == true) {
+            stations.push_back(new Station(Name, District, Municipality, Township, Line));
+        }
 
         n++;
     }
@@ -70,20 +107,20 @@ int Network::readStations(const string& fileLocation) {
     return n;
 }
 
-int Network::readConnections(const string& fileLocation) {
+unsigned int Network::readConnections(const std::string &fileLocation) {
 
     fstream file;
     file.open(fileLocation + "network.csv", ios::in);
     if (!file.is_open()) {
-        cout << "ERROR - The function \"readConnections\" could not read the data" << endl;
+        std::cout << "ERROR - The function \"readConnections\" could not read the data" << std::endl;
         return 0;
     }
 
     int n = 0;
-    string Source;
-    string Destination;
-    string Capacity;
-    string Service;
+    std::string Source;
+    std::string Destination;
+    std::string Capacity;
+    std::string Service;
 
     getline(file, Source); // Skip fist line
     while (getline(file, Source, ',')) {
@@ -91,8 +128,23 @@ int Network::readConnections(const string& fileLocation) {
         getline(file, Capacity, ',');
         getline(file, Service);
 
-        stations.find(Source)->second.addConnection({Source, Destination, static_cast<unsigned int>(stoul(Capacity)), Service});
+        // Finding the stations
+        Station * stationA = nullptr;
+        Station * stationB = nullptr;
+        for (auto station : stations) {
+            if (stationA != nullptr && stationB != nullptr) {
+                break;
+            }
+            if (station->getName() == Source) {
+                stationA = station;
+            }
+            else if (station->getName() == Destination) {
+                stationB = station;
+            }
+        }
 
+        stationA->addConnection(stationB, stoul(Capacity), Service);
+        stationB->addConnection(stationA, stoul(Capacity), Service);
         n++;
     }
     file.close();
@@ -109,24 +161,180 @@ bool Network::doesStationExist(const std::string& input, Station*& stationPtr) {
     return false;
 }
 
+Station * Network::findStation(std::string name) {
+    for (auto station : stations) {
+        if (station->getName() == name) {
+            return station;
+        }
+    }
+    return nullptr;
+}
+
+// Edmonds-Karp Algorithm
+void Network::testAndVisit(std::queue< Station*> &q, Connection *e, Station *w, unsigned int residual) {
+    if (! w->isVisited() && residual > 0) {
+        w->setVisited(true);
+        w->setPath(e);
+        q.push(w);
+    }
+}
+
+bool Network::findAugmentingPath(Station *s, Station *t) {
+    for(auto v : stations) {
+        v->setVisited(false);
+    }
+    s->setVisited(true);
+    std::queue<Station *> q;
+    q.push(s);
+    while( ! q.empty() && ! t->isVisited()) {
+        auto v = q.front();
+        q.pop();
+        for(auto e: v->getConnections()) {
+            testAndVisit(q, e, e->getDestination(), e->getCapacity() - e->getFlow());
+        }
+        for(auto e: v->getIncoming()) {
+            testAndVisit(q, e, e->getOrigin(), e->getFlow());
+        }
+    }
+    return t->isVisited();
+}
+
+unsigned int Network::findMinResidualAlongPath(Station *s, Station *t) {
+    unsigned int f = INT_MAX;
+    for (auto v = t; v != s; ) {
+        auto e = v->getPath();
+        if (e->getDestination() == v) {
+            f = std::min(f, e->getCapacity() - e->getFlow());
+            v = e->getOrigin();
+        }
+        else {
+            f = std::min(f, e->getFlow());
+            v = e->getDestination();
+        }
+    }
+    return f;
+}
+
+void Network::augmentFlowAlongPath(Station *s, Station *t, unsigned int f) {
+    for (auto v = t; v != s; ) {
+        auto e = v->getPath();
+        unsigned int flow = e->getFlow();
+        if (e->getDestination() == v) {
+            e->setFlow(flow + f);
+            v = e->getOrigin();
+        }
+        else {
+            e->setFlow(flow - f);
+            v = e->getDestination();
+        }
+    }
+}
+
+unsigned int Network::edmondsKarp(std::string source, std::string target) {
+    Station* s = findStation(source);
+    Station* t = findStation(target);
+
+    if (s == nullptr || t == nullptr || s == t)
+        throw std::logic_error("Invalid source and/or target vertex");
+
+    // Reset the flows
+    for (auto v : stations) {
+        for (auto e: v->getConnections()) {
+            e->setFlow(0);
+        }
+    }
+    // Loop to find augmentation paths
+    while( findAugmentingPath(s, t) ) {
+        unsigned int f = findMinResidualAlongPath(s, t);
+        augmentFlowAlongPath(s, t, f);
+    }
+
+    unsigned int maxFlow = 0;
+    for (auto connection : s->getConnections()){
+        maxFlow += connection->getFlow();
+    }
+
+
+    return maxFlow;
+}
+
+std::vector<std::pair<std::string,std::string>> Network::mostTrains() {
+    unsigned int max = 0;
+    std::vector<std::pair<std::string,std::string>> most;
+
+    for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
+        for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
+            unsigned int flow = edmondsKarp((*it1)->getName(), (*it2)->getName());
+            if (flow > max) {
+                max = flow;
+                most.clear();
+                most.push_back(std::make_pair((*it1)->getName(), (*it2)->getName()));
+            }
+            else if (flow == max) {
+                most.push_back(std::make_pair((*it1)->getName(), (*it2)->getName()));
+            }
+        }
+    }
+
+    return most;
+}
+
+std::vector<Station *> Network::BFS(Station *source) {
+    // Set stations to unvisited
+    for (auto station : stations) {
+        station->setVisited(false);
+    }
+
+    std::vector<Station *> visited;
+    std::queue<Station *> queue;
+    queue.push(source);
+    source->setVisited(true);
+
+    while (!queue.empty()) {
+        auto n = queue.front();
+        queue.pop();
+
+        for (auto connection : n->getConnections()) {
+            if (!connection->getDestination()->isVisited()) {
+                connection->getDestination()->setVisited(true);
+                queue.push(connection->getDestination());
+                visited.push_back(connection->getDestination());
+            }
+        }
+    }
+    return visited;
+}
+
+unsigned int Network::maxTrainsToStation(std::string station) {
+
+    std::vector<Station *> tree;
+    tree = BFS(findStation(station));
+
+    // Add the new SuperStation
+    auto superStation = new Station("temp", "temp", "temp", "temp", "temp");
+    stations.push_back(superStation);
+    for (auto node : tree) {
+        node->addBidirectionalConnection(superStation, INT_MAX, "temp");
+    }
+
+    unsigned int most = edmondsKarp(superStation->getName(), station);
+
+    // Removing the SuperStation
+    for (auto connection : superStation->getConnections()) {
+        connection->getDestination()->removeConnection(superStation);
+        superStation->removeConnection(connection->getDestination());
+    }
+    delete superStation;
+
+    return most;
+}
+
 // ---------------------- Getters ---------------------- //
 
-const pair<int, int> &Network::getTrainPrices() const {
-    return trainPrices;
-}
 
-const unordered_map<std::string, Station> &Network::getStations() const {
-    return stations;
-}
 
 // ---------------------- Setters ---------------------- //
 
-void Network::setTrainPrices(const pair<int, int> &trainPrices) {
-    Network::trainPrices = trainPrices;
-}
 
-void Network::setStations(const unordered_map<std::string, Station> &unorderedMap) {
-    Network::stations = unorderedMap;
-}
 
 // -------------------- END OF FILE -------------------- //
