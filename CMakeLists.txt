@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(Railway_Network_Manager)
 
 set(CMAKE_CXX_STANDARD 20)
-
-add_executable(Railway_Network_Manager main.cpp src/StationConnection.cpp src/StationConnection.h src/Network.cpp src/Network.h)
+add_executable(Railway_Network_Manager main.cpp src/Menu.cpp src/Menu.h src/StationConnection.cpp src/StationConnection.h src/Network.cpp src/Network.h)
 
 # Doxygen Build
 

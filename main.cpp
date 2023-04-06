@@ -1,11 +1,6 @@
-#include "src/Network.h"
-#include <iostream>
+#include "src/Menu.h"
 
 int main() {
-    Network railway;
-
-    std::cout << "Flow: " << railway.edmondsKarp("Arentim", "Esgueira") << std::endl;
-
-
+    Menu menu;
     return 0;
 }
