@@ -242,6 +242,27 @@ unsigned int Network::edmondsKarp(std::string source, std::string target) {
     return maxFlow;
 }
 
+std::vector<std::pair<std::string,std::string>> Network::mostTrains() {
+    unsigned long max = 0;
+    std::vector<std::pair<std::string,std::string>> most;
+
+    for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
+        for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
+            unsigned long flow = edmondsKarp((*it1)->getName(), (*it2)->getName());
+            if (flow > max) {
+                max = flow;
+                most.clear();
+                most.push_back(std::make_pair((*it1)->getName(), (*it2)->getName()));
+            }
+            else if (flow == max) {
+                most.push_back(std::make_pair((*it1)->getName(), (*it2)->getName()));
+            }
+        }
+    }
+
+    return most;
+}
+
 // ---------------------- Getters ---------------------- //
 
 std::vector<Station *> Network::getStations() const {

@@ -25,6 +25,7 @@ public:
     unsigned int findMinResidualAlongPath(Station *s, Station *t);
     void augmentFlowAlongPath(Station *s, Station *t, unsigned int f);
     unsigned int edmondsKarp(std::string source, std::string target);
+    std::vector<std::pair<std::string,std::string>> mostTrains();
 
 private:
     std::vector<Station *> stations;

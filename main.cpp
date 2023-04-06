@@ -4,7 +4,10 @@
 int main() {
     Network railway;
 
-    std::cout << "Flow: " << railway.edmondsKarp("Arentim", "Esgueira") << std::endl;
+
+    for (auto pair : railway.mostTrains()) {
+        std::cout << pair.first << "\t\t\t" << pair.second << std::endl;
+    }
 
 
     return 0;
