@@ -137,7 +137,7 @@ void Menu::setUpPrinter(int flag) {
                  << "   Select your option: ";
             break;
         case 1:
-            system("cls");
+            system("clear || cls");
             cout << endl
                  << "   Please select the desired train prices:" << endl << endl
                  << "     1. Default prices" << endl << endl
@@ -145,7 +145,7 @@ void Menu::setUpPrinter(int flag) {
                  << "   Select your option: ";
             break;
         case 2:
-            system("cls");
+            system("clear || cls");
             cout << endl << "   -> Train Prices <-" << endl
                  << endl << "   STANDARD service : ";
             break;
@@ -194,7 +194,7 @@ void Menu::mainMenu(bool isLoading) {
 }
 
 void Menu::mainMenuOptions(bool isLoading) {
-    system("cls");
+    system("clear || cls");
     if (isLoading) {
         cout << endl
              << "   Railway Network Manager                 A.Neves | E.Miranda | P.Gomes" << endl
@@ -256,7 +256,7 @@ void Menu::basicServiceMenu() {
 }
 
 void Menu::basicServiceMenuPrinter() {
-    system("cls");
+    system("clear || cls");
     cout << endl
          << "                                                   Basic Service Metrics" << endl
          << "   ---------------------------------------------------------------------" << endl
@@ -333,7 +333,7 @@ void Menu::lineFailuresMenu() { //TODO
 }
 
 void Menu::lineFailuresMenuPrinter() {
-    system("cls");
+    system("clear || cls");
     cout << endl
          << "                            Reliability and Sensitivity to Line Failures" << endl
          << "   ---------------------------------------------------------------------" << endl
@@ -359,7 +359,7 @@ Station* Menu::receiveStation(bool type) {
     string input;
     Station* stationptr;
 
-    system("cls");
+    system("clear || cls");
     if (type)
         cout << endl << "   -> SOURCE <-" << endl;
     else
