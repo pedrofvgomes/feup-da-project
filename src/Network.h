@@ -1,25 +1,34 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <string>
-#include <unordered_map>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits>
+#include <algorithm>
 
-#include "Station.h"
-#include "Connection.h"
+#include "StationConnection.h"
 
 class Network {
 public:
     Network();
-    const std::unordered_map<std::string, Station> &getStations() const;
-    void setStations(const std::unordered_map<std::string, Station> &stations);
-    void addStation(const Station& newStation);
-    void addConnection(const Connection& newConnection);
-    int readStations(const std::string& fileLocation);
-    int readConnections(const std::string& fileLocation);
+    Station * findStation(const std::string &name) const;
+    void addStation(const std::string &name, const std::string &district, const std::string &municipality, const std::string &township, const std::string &line);
+    void addBidirectionalConnection(const std::string &source, const std::string &destination, unsigned int capacity, std::string service);
+    std::vector<Station *> getStations() const;
+    unsigned int readStations(const std::string &fileLocation);
+    unsigned int readConnections(const std::string &fileLocation);
+    Station * findStation(std::string name);
 
-    void dfs(std::string& s);
+    void testAndVisit(std::queue< Station*> &q, Connection *e, Station *w, unsigned int residual);
+    bool findAugmentingPath(Station *s, Station *t);
+    unsigned int findMinResidualAlongPath(Station *s, Station *t);
+    void augmentFlowAlongPath(Station *s, Station *t, unsigned int f);
+    unsigned int edmondsKarp(std::string source, std::string target);
+
 private:
-    std::unordered_map<std::string, Station> stations;
+    std::vector<Station *> stations;
+
 };
 
 #endif //NETWORK_H
