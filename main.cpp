@@ -4,10 +4,7 @@
 int main() {
     Network railway;
 
-
-    for (auto pair : railway.mostTrains()) {
-        std::cout << pair.first << "\t\t\t" << pair.second << std::endl;
-    }
+    std::cout << "Trains: " << railway.maxTrainsToStation("Trofa") << std::endl;
 
 
     return 0;

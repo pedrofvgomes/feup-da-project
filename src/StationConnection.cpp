@@ -25,6 +25,28 @@ Connection *Station::addConnection(Station *destination, int capacity, std::stri
     return newConnection;
 }
 
+void Station::addBidirectionalConnection(Station *destination, int capacity, std::string service) {
+    auto newConnection = addConnection(destination, capacity, service);
+    destination->addConnection(newConnection->getOrigin(), capacity, service);
+}
+
+bool Station::removeConnection(Station *destination) {
+    // Remove connection
+    for (auto it1 = connections.begin(); it1 != connections.end(); it1++) {
+        if ((*it1)->getDestination() == destination) {
+            connections.erase(it1);
+            // Remove incomming connection from destination
+            for (auto it2 = destination->incoming.begin(); it2 != destination->incoming.end(); it2++) {
+                if ((*it2)->getOrigin()->getName() == name) {
+                    destination->incoming.erase(it2);
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 // ---------------------- Getters ---------------------- //
 std::string Station::getName() const {
     return name;

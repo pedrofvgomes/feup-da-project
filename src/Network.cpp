@@ -235,20 +235,21 @@ unsigned int Network::edmondsKarp(std::string source, std::string target) {
     }
 
     unsigned int maxFlow = 0;
-    for(auto connection : s->getConnections()){
+    for (auto connection : s->getConnections()){
         maxFlow += connection->getFlow();
     }
+
 
     return maxFlow;
 }
 
 std::vector<std::pair<std::string,std::string>> Network::mostTrains() {
-    unsigned long max = 0;
+    unsigned int max = 0;
     std::vector<std::pair<std::string,std::string>> most;
 
     for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
         for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
-            unsigned long flow = edmondsKarp((*it1)->getName(), (*it2)->getName());
+            unsigned int flow = edmondsKarp((*it1)->getName(), (*it2)->getName());
             if (flow > max) {
                 max = flow;
                 most.clear();
@@ -259,6 +260,56 @@ std::vector<std::pair<std::string,std::string>> Network::mostTrains() {
             }
         }
     }
+
+    return most;
+}
+
+std::vector<Station *> Network::BFS(Station *source) {
+    // Set stations to unvisited
+    for (auto station : stations) {
+        station->setVisited(false);
+    }
+
+    std::vector<Station *> visited;
+    std::queue<Station *> queue;
+    queue.push(source);
+    source->setVisited(true);
+
+    while (!queue.empty()) {
+        auto n = queue.front();
+        queue.pop();
+
+        for (auto connection : n->getConnections()) {
+            if (!connection->getDestination()->isVisited()) {
+                connection->getDestination()->setVisited(true);
+                queue.push(connection->getDestination());
+                visited.push_back(connection->getDestination());
+            }
+        }
+    }
+    return visited;
+}
+
+unsigned int Network::maxTrainsToStation(std::string station) {
+
+    std::vector<Station *> tree;
+    tree = BFS(findStation(station));
+
+    // Add the new SuperStation
+    auto superStation = new Station("temp", "temp", "temp", "temp", "temp");
+    stations.push_back(superStation);
+    for (auto node : tree) {
+        node->addBidirectionalConnection(superStation, INT_MAX, "temp");
+    }
+
+    unsigned int most = edmondsKarp(superStation->getName(), station);
+
+    // Removing the SuperStation
+    for (auto connection : superStation->getConnections()) {
+        connection->getDestination()->removeConnection(superStation);
+        superStation->removeConnection(connection->getDestination());
+    }
+    delete superStation;
 
     return most;
 }

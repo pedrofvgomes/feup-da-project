@@ -30,6 +30,8 @@ public:
     void setVisited(bool visited);
     void setPath(Connection *path);
     Connection *addConnection(Station *destination, int capacity, std::string service);
+    void addBidirectionalConnection(Station *destination, int capacity, std::string service);
+    bool removeConnection(Station *destination);
 
 protected:
     std::string name;
