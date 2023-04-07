@@ -298,6 +298,11 @@ void Menu::costOptimizationMenuPrinter() { //TODO
 
 // ------------------- Line Failures ------------------- //
 
+// Added so the top-k can be done for the T4.2 exercice
+bool sortbysec(const pair<std::string, unsigned int> &a, const pair<std::string ,unsigned int> &b) {
+    return (a.second > b.second);
+}
+
 void Menu::lineFailuresMenu() { //TODO
     int input;
 
@@ -319,10 +324,24 @@ void Menu::lineFailuresMenu() { //TODO
         subRailway.removeBidirectionalConnection(subRailway.findStation("Nine"), subRailway.findStation("Trofa"));
 
         // The option 2 is just the Edmonds-Karp Algorithm
+            // Ask for the source and target
         subRailway.edmondsKarp(source, dest);
 
         // Option 3
+        auto railwayFlows = railway.maxFlowPerStation();
+        auto subRailwayFlows = subRailway.maxFlowPerStation();
+        std::vector<std::pair<std::string, unsigned int>> diff;
 
+        for (auto station1 : railwayFlows) {
+            if (station1.second != subRailwayFlows[station1.first]) {
+                diff.push_back(make_pair(station1.first->getName(), station1.second - subRailwayFlows[station1.first]));
+            }
+        }
+
+        std::sort(diff.begin(), diff.end(), sortbysec);
+        for (int i = 0; i < k; i++) {
+            // Print top-k stations
+        }
 
         // Quando o utilizador sair deste menu o subRailway será automaticamente eliminado
     // ---------

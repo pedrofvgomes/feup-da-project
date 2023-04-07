@@ -271,6 +271,21 @@ std::vector<std::pair<std::string,std::string>> Network::mostTrains() {
     return most;
 }
 
+std::unordered_map<Station *, unsigned int> Network::maxFlowPerStation() {
+    std::unordered_map<Station *, unsigned int> flows;
+
+    for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
+        unsigned int sum = 0;
+        for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
+            unsigned int flow = edmondsKarp(*it1, *it2);
+            sum += flow;
+        }
+        flows[*it1] = sum;
+    }
+
+    return flows;
+}
+
 bool sortbysec(const pair<std::string, unsigned int> &a, const pair<std::string ,unsigned int> &b) {
     return (a.second > b.second);
 }
@@ -283,7 +298,7 @@ std::vector<std::pair<std::string, unsigned int>> Network::topKMunicipalities(un
     // Get the sum of flows for each municipality
     for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
         for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
-            unsigned int flow = edmondsKarp((*it1), (*it2));
+            unsigned int flow = edmondsKarp(*it1, *it2);
             if (municipalityFlow.contains((*it1)->getMunicipality())) {
                 municipalityFlow[(*it1)->getMunicipality()] += flow;
             }
@@ -317,7 +332,7 @@ std::vector<std::pair<std::string, unsigned int>> Network::topKDistricts(unsigne
     // Get the sum of flows for each municipality
     for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
         for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
-            auto flow = edmondsKarp((*it1), (*it2));
+            auto flow = edmondsKarp(*it1, *it2);
             if (districtsFlow.contains((*it1)->getDistrict())) {
                 districtsFlow[(*it1)->getDistrict()] += flow;
             }

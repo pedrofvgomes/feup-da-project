@@ -82,7 +82,6 @@ public:
     static bool confirmChoice();
     inline static bool isStationOutputSafe(Station* stationptr);
 
-
 private:
 
     std::string dataPath;

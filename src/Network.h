@@ -39,6 +39,9 @@ public:
     unsigned int maxTrainsToStation(std::string station);
     void removeBidirectionalConnection(Station *source, Station *destination);
 
+    // TODO
+    std::unordered_map<Station *, unsigned int> maxFlowPerStation();
+
 private:
 
     std::pair<int,int> trainPrices;
