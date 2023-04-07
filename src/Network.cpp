@@ -228,13 +228,7 @@ void Network::augmentFlowAlongPath(Station *s, Station *t, unsigned int f) {
     }
 }
 
-unsigned int Network::edmondsKarp(std::string source, std::string target) {
-    Station* s = findStation(source);
-    Station* t = findStation(target);
-
-    if (s == nullptr || t == nullptr || s == t)
-        throw std::logic_error("Invalid source and/or target vertex");
-
+unsigned int Network::edmondsKarp(Station *source, Station *target) {
     // Reset the flows
     for (auto v : stations) {
         for (auto e: v->getConnections()) {
@@ -242,13 +236,13 @@ unsigned int Network::edmondsKarp(std::string source, std::string target) {
         }
     }
     // Loop to find augmentation paths
-    while( findAugmentingPath(s, t) ) {
-        unsigned int f = findMinResidualAlongPath(s, t);
-        augmentFlowAlongPath(s, t, f);
+    while( findAugmentingPath(source, target) ) {
+        unsigned int f = findMinResidualAlongPath(source, target);
+        augmentFlowAlongPath(source, target, f);
     }
 
     unsigned int maxFlow = 0;
-    for (auto connection : s->getConnections()){
+    for (auto connection : source->getConnections()){
         maxFlow += connection->getFlow();
     }
 
@@ -262,7 +256,7 @@ std::vector<std::pair<std::string,std::string>> Network::mostTrains() {
 
     for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
         for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
-            unsigned int flow = edmondsKarp((*it1)->getName(), (*it2)->getName());
+            unsigned int flow = edmondsKarp((*it1), (*it2));
             if (flow > max) {
                 max = flow;
                 most.clear();
@@ -289,7 +283,7 @@ std::vector<std::pair<std::string, unsigned int>> Network::topKMunicipalities(un
     // Get the sum of flows for each municipality
     for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
         for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
-            auto flow = edmondsKarp((*it1)->getName(), (*it2)->getName());
+            unsigned int flow = edmondsKarp((*it1), (*it2));
             if (municipalityFlow.contains((*it1)->getMunicipality())) {
                 municipalityFlow[(*it1)->getMunicipality()] += flow;
             }
@@ -323,7 +317,7 @@ std::vector<std::pair<std::string, unsigned int>> Network::topKDistricts(unsigne
     // Get the sum of flows for each municipality
     for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
         for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
-            auto flow = edmondsKarp((*it1)->getName(), (*it2)->getName());
+            auto flow = edmondsKarp((*it1), (*it2));
             if (districtsFlow.contains((*it1)->getDistrict())) {
                 districtsFlow[(*it1)->getDistrict()] += flow;
             }
@@ -387,7 +381,7 @@ unsigned int Network::maxTrainsToStation(std::string station) {
         node->addBidirectionalConnection(superStation, INT_MAX, "temp");
     }
 
-    unsigned int most = edmondsKarp(superStation->getName(), station);
+    unsigned int most = edmondsKarp(superStation, findStation(station));
 
     // Removing the SuperStation
     for (auto connection : superStation->getConnections()) {
@@ -397,6 +391,15 @@ unsigned int Network::maxTrainsToStation(std::string station) {
     delete superStation;
 
     return most;
+}
+
+void Network::removeBidirectionalConnection(Station *source, Station *destination) {
+    for (auto connection : source->getConnections()) {
+        if (connection->getDestination() == destination) {
+            connection->getDestination()->removeConnection(destination);
+            destination->removeConnection(connection->getDestination());
+        }
+    }
 }
 
 // ---------------------- Getters ---------------------- //
@@ -418,5 +421,6 @@ void Network::setTrainPrices(const std::pair<int, int> &trainPrices) {
 void Network::setStations(const std::vector<Station *> &stations) {
     Network::stations = stations;
 }
+
 
 // -------------------- END OF FILE -------------------- //

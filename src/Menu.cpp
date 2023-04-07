@@ -308,6 +308,25 @@ void Menu::lineFailuresMenu() { //TODO
         cin.clear(); cin.ignore(10000, '\n');
     }
 
+    // What I changed
+    Network subRailway = railway;
+        // This will be option 1 of the menu where we ask the user for
+        // the source station and destination of the edge
+        Station *source = subRailway.findStation("Nine");
+        Station *dest = subRailway.findStation("Trofa");
+        subRailway.removeBidirectionalConnection(source, dest);
+        // ou assim,
+        subRailway.removeBidirectionalConnection(subRailway.findStation("Nine"), subRailway.findStation("Trofa"));
+
+        // The option 2 is just the Edmonds-Karp Algorithm
+        subRailway.edmondsKarp(source, dest);
+
+        // Option 3
+        // TODO
+
+        // Quando o utilizador sair deste menu o subRailway será automaticamente eliminado
+    // ---------
+
     do {
         switch (input) {
             case 0:
