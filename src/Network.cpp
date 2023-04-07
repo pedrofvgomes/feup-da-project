@@ -375,10 +375,10 @@ unsigned int Network::maxTrainsToStation(std::string station) {
     tree = BFS(findStation(station));
 
     // Add the new SuperStation
-    auto superStation = new Station("temp", "temp", "temp", "temp", "temp");
+    auto superStation = new Station("super", "super", "super", "super", "super");
     stations.push_back(superStation);
     for (auto node : tree) {
-        node->addBidirectionalConnection(superStation, INT_MAX, "temp");
+        node->addBidirectionalConnection(superStation, INT_MAX, "super");
     }
 
     unsigned int most = edmondsKarp(superStation, findStation(station));
