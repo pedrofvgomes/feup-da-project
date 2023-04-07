@@ -256,67 +256,6 @@ unsigned int Network::edmondsKarp(std::string source, std::string target) {
     return maxFlow;
 }
 
-
-bool cmp(std::pair<std::string, unsigned int>& mun1, std::pair<std::string, unsigned int>& mun2) {
-    if (mun2.second == mun1.second) return mun1.first < mun2.first;
-    return mun2.second < mun1.second;
-}
-
-unsigned int stationCapacity(Station* station){
-    unsigned int capacity = 0;
-    for(auto &connection : station->getConnections()){
-        capacity += connection->getCapacity();
-    }
-    return capacity;
-}
-
-std::vector<std::string> Network::topKMunicipalitiesByCapacity(unsigned int k) {
-    std::vector<std::string> topK;
-    std::map<std::string, unsigned int> municipalityCapacity;
-    std::vector<std::pair<std::string, unsigned int>> sorted;
-
-    /* calculate each municipality's total capacity */
-
-    for(auto &station : this->stations){
-        municipalityCapacity[station->getMunicipality()] += stationCapacity(station);
-    }
-
-    /* pass the map values to a vector, so it can be sorted differently, and sort it */
-
-    for(auto &i : municipalityCapacity) sorted.emplace_back(i);
-    std::sort(sorted.begin(), sorted.end(), cmp);
-
-    /* top K municipalities' name */
-
-    for(int i=0; i<k; i++) topK.push_back(sorted[i].first);
-
-    return topK;
-}
-
-std::vector<std::string> Network::topKDistrictsByCapacity(unsigned int k) {
-    std::vector<std::string> topK;
-    std::map<std::string, unsigned int> districtCapacity;
-    std::vector<std::pair<std::string, unsigned int>> sorted;
-
-    /* calculate each district's total capacity */
-
-    for(auto &station : this->stations){
-        districtCapacity[station->getDistrict()] += stationCapacity(station);
-    }
-
-    /* pass the map values to a vector, so it can be sorted differently, and sort it */
-
-    for(auto &i : districtCapacity) sorted.emplace_back(i);
-    std::sort(sorted.begin(), sorted.end(), cmp);
-
-    /* top K municipalities' name */
-
-    for(int i=0; i<k; i++) topK.push_back(sorted[i].first);
-
-    return topK;
-}
-
-
 std::vector<std::pair<std::string,std::string>> Network::mostTrains() {
     unsigned int max = 0;
     std::vector<std::pair<std::string,std::string>> most;
@@ -336,6 +275,78 @@ std::vector<std::pair<std::string,std::string>> Network::mostTrains() {
     }
 
     return most;
+}
+
+bool sortbysec(const pair<std::string, unsigned int> &a, const pair<std::string ,unsigned int> &b) {
+    return (a.second > b.second);
+}
+
+std::vector<std::pair<std::string, unsigned int>> Network::topKMunicipalities(unsigned int k) {
+
+    std::vector<std::pair<std::string, unsigned int>> topK;
+    std::unordered_map<std::string, unsigned int> municipalityFlow;
+
+    // Get the sum of flows for each municipality
+    for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
+        for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
+            auto flow = edmondsKarp((*it1)->getName(), (*it2)->getName());
+            if (municipalityFlow.contains((*it1)->getMunicipality())) {
+                municipalityFlow[(*it1)->getMunicipality()] += flow;
+            }
+            else {
+                municipalityFlow[(*it1)->getMunicipality()] = flow;
+            }
+        }
+    }
+
+    // Sort the flows
+    std::vector<std::pair<std::string, unsigned int>> sorted;
+    for (auto pair : municipalityFlow) {
+        sorted.push_back(pair);
+    }
+    std::sort(sorted.begin(), sorted.end(), sortbysec);
+
+    // Get the top-k municipalities
+    for (int i = 0; i < k; i++) {
+        topK.push_back(make_pair(sorted.begin()->first, sorted.begin()->second));
+        sorted.erase(sorted.begin());
+    }
+
+    return topK;
+}
+
+std::vector<std::pair<std::string, unsigned int>> Network::topKDistricts(unsigned int k) {
+
+    std::vector<std::pair<std::string, unsigned int>> topK;
+    std::unordered_map<std::string, unsigned int> districtsFlow;
+
+    // Get the sum of flows for each municipality
+    for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
+        for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
+            auto flow = edmondsKarp((*it1)->getName(), (*it2)->getName());
+            if (districtsFlow.contains((*it1)->getDistrict())) {
+                districtsFlow[(*it1)->getDistrict()] += flow;
+            }
+            else {
+                districtsFlow[(*it1)->getDistrict()] = flow;
+            }
+        }
+    }
+
+    // Sort the flows
+    std::vector<std::pair<std::string, unsigned int>> sorted;
+    for (auto pair : districtsFlow) {
+        sorted.push_back(pair);
+    }
+    std::sort(sorted.begin(), sorted.end(), sortbysec);
+
+    // Get the top-k municipalities
+    for (int i = 0; i < k; i++) {
+        topK.push_back(make_pair(sorted.begin()->first, sorted.begin()->second));
+        sorted.erase(sorted.begin());
+    }
+
+    return topK;
 }
 
 std::vector<Station *> Network::BFS(Station *source) {

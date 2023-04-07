@@ -32,8 +32,8 @@ public:
     unsigned int findMinResidualAlongPath(Station *s, Station *t);
     void augmentFlowAlongPath(Station *s, Station *t, unsigned int f);
     unsigned int edmondsKarp(std::string source, std::string target);
-    std::vector<std::string> topKMunicipalitiesByCapacity(unsigned int k);
-    std::vector<std::string> topKDistrictsByCapacity(unsigned int k);
+    std::vector<std::pair<std::string, unsigned int>> topKMunicipalities(unsigned int k);
+    std::vector<std::pair<std::string, unsigned int>> topKDistricts(unsigned int k);
     std::vector<std::pair<std::string,std::string>> mostTrains();
     std::vector<Station *> BFS(Station *source);
     unsigned int maxTrainsToStation(std::string station);
