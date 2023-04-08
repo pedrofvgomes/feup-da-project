@@ -125,6 +125,43 @@ pair<int,int> Menu::getUserTrainPrices() {
     return res;
 }
 
+void Menu::setUpSubRailway() {
+    int input;
+
+    setUpPrinter(4);
+
+    while (!(cin >> input)) {
+        cout << endl << "   Please select a valid option: ";
+        cin.clear(); cin.ignore(10000, '\n');
+    }
+
+    do {
+        switch (input) {
+            case 0:
+                return;
+            case 1:
+                subrailway = railway;
+                lineFailuresMenu();
+                return;
+            case 2:
+                randomGenerateRailway();
+                lineFailuresMenu();
+                return;
+            case 3:
+                removeConnectionsRailway();
+                lineFailuresMenu();
+                return;
+            default:
+                cout << endl << "   Please select a valid option: ";
+                while (!(cin >> input)) {
+                    cout << endl << "   Please select a valid option: ";
+                    cin.clear(); cin.ignore(10000, '\n');
+                }
+        }
+    }
+    while(true);
+}
+
 void Menu::setUpPrinter(int flag) {
     switch (flag) {
         case 0:
@@ -149,6 +186,15 @@ void Menu::setUpPrinter(int flag) {
             break;
         case 3:
             cout << endl << "   ALFA PENDULAR service : ";
+            break;
+        case 4:
+            system("clear || cls");
+            cout << endl
+                 << "   Please select how you want to create the new sub railway:" << endl << endl
+                 << "     1. Use the full railway" << endl << endl
+                 << "     2. Random generate using a seed" << endl << endl
+                 << "     3. Pick connections to remove" << endl << endl
+                 << "   Select your option: ";
             break;
         default:
             throw invalid_argument("Invalid option selected.");
@@ -178,7 +224,7 @@ void Menu::mainMenu(bool isLoading) {
                 setUpTrainPricesMenu();
                 return;
             case 3:
-                lineFailuresMenu();
+                setUpSubRailway();
                 return;
             default:
                 cout << endl << "   Please select a valid option : ";
@@ -259,10 +305,10 @@ void Menu::basicServiceMenuPrinter() {
          << "                                                   Basic Service Metrics" << endl
          << "   ---------------------------------------------------------------------" << endl
          << "   Please select your desired option by typing it on the selector intake" << endl << endl
-         << "     1. Flow of trains between two stations" << endl << endl
+         << "     1. Max number of trains between two stations" << endl << endl
          << "     2. Busiest connections of the grid" << endl << endl
          << "     3. Most important municipalities/districts" << endl << endl
-         << "     4. Manage arrivals at given station" << endl << endl << endl
+         << "     4. Max number of trains arriving at a given station" << endl << endl << endl
          << "     9. Return to Main Menu" << endl << endl
          << "     0. Exit application" << endl << endl
          << "   Select your option : ";
@@ -293,7 +339,6 @@ void Menu::basicMaxFlow() {
 
     pressEnterToReturn();
     basicServiceMenu();
-    return;
 }
 
 void Menu::basicMostBusy() {
@@ -321,7 +366,6 @@ void Menu::basicMostBusy() {
 
     pressEnterToReturn();
     basicServiceMenu();
-    return;
 }
 
 void Menu::basicMostImportant() {
@@ -342,14 +386,13 @@ void Menu::basicMostImportant() {
 
     system("clear || cls");
     cout << endl << "   | DISTRICTS |" << endl << endl;
-    for (auto p : topDis) { cout << "   " << p.second << " - " << p.first << endl; }
+    for (const auto& p : topDis) { cout << "   " << p.second << " - " << p.first << endl; }
 
     cout << endl << "   | MUNICIPALITIES |" << endl << endl;
-    for (auto p : topMun) { cout << "   " << p.second << " - " << p.first << endl; }
+    for (const auto& p : topMun) { cout << "   " << p.second << " - " << p.first << endl; }
 
     pressEnterToReturn();
     basicServiceMenu();
-    return;
 }
 
 void Menu::basicMaxFlowIntireGrid() {
@@ -358,7 +401,7 @@ void Menu::basicMaxFlowIntireGrid() {
 
     system("clear || cls");
     cout << endl
-         << "   | STATION FLOW |" << endl << endl;
+         << "   | STATION ARRIVALS |" << endl;
 
     if (isStationOutputSafe(station))
         cout << endl << "   You've selected the " << station->getName() << " station located in "
@@ -366,12 +409,11 @@ void Menu::basicMaxFlowIntireGrid() {
     else
         cout << endl << "   You've selected the " << station->getName() << " station." << endl;
 
-    cout << "   Considering the entire grid, the maximum number of trains that can" << endl
-         << "   simultaneously travel between these two specific stations is of " << maxFlow << "." << endl;
+    cout << endl << "   Considering the entire grid, the maximum number of trains that can" << endl
+         << endl << "     simultaneously travel between these two specific stations is of " << maxFlow << "." << endl;
 
     pressEnterToReturn();
     basicServiceMenu();
-    return;
 }
 
 // ----------------- Cost Optimization ----------------- //
@@ -395,25 +437,6 @@ void Menu::lineFailuresMenu() { //TODO
         cout << endl << "   Please select a valid option : ";
         cin.clear(); cin.ignore(10000, '\n');
     }
-
-    // What I changed
-    Network subRailway = railway;
-        // This will be option 1 of the menu where we ask the user for
-        // the source station and destination of the edge
-        Station *source = subRailway.findStation("Nine");
-        Station *dest = subRailway.findStation("Trofa");
-        subRailway.removeBidirectionalConnection(source, dest);
-        // ou assim,
-        subRailway.removeBidirectionalConnection(subRailway.findStation("Nine"), subRailway.findStation("Trofa"));
-
-        // The option 2 is just the Edmonds-Karp Algorithm
-        subRailway.edmondsKarp(source, dest);
-
-        // Option 3
-        // TODO
-
-        // Quando o utilizador sair deste menu o subRailway será automaticamente eliminado
-    // ---------
 
     do {
         switch (input) {
@@ -439,7 +462,7 @@ void Menu::lineFailuresMenu() { //TODO
     while(true);
 }
 
-void Menu::lineFailuresMenuPrinter() {
+void Menu::lineFailuresMenuPrinter() { //TODO
     system("clear || cls");
     cout << endl
          << "                            Reliability and Sensitivity to Line Failures" << endl
@@ -458,6 +481,41 @@ void Menu::failuresMaxFlow() { //TODO
 
 void Menu::failuresReport() { //TODO
 
+}
+
+// ----------------- Subrailway Manager ---------------- //
+
+void Menu::randomGenerateRailway() { //TODO
+
+}
+
+void Menu::removeConnectionsRailway() {
+    int n;
+
+    system("clear || cls");
+    cout << endl << "   | REMOVE CONNECTIONS |" << endl
+         << endl << "   Please enter the number of connections you wish to remove : ";
+
+    while (!(cin >> n)) {
+        cout << endl << "   Please enter the number of connections you wish to remove : ";
+        cin.clear(); cin.ignore(10000, '\n');
+    }
+
+    while (n != 0) {
+        Station *source = receiveStation(true);
+        Station *destination = receiveStation(false);
+        if (subrailway.removeBidirectionalConnection(source, destination)) {
+            n--;
+            cout << endl << "   ! Connection removed successfully !" << endl
+                 << endl << "   SOURCE -> " << source->getName() << endl
+                 << endl << "   DESTINATION -> " << destination->getName() << endl;
+            pressEnterToContinue();
+        } else
+            cout << endl << "   ! ERROR: STATIONS ARE NOT DIRECTLY CONNECTED !" << endl
+                 << endl << "   SOURCE -> " << source->getName() << endl
+                 << endl << "   DESTINATION -> " << destination->getName() << endl;
+        pressEnterToContinue();
+    }
 }
 
 // ----------------- Auxiliar Functions ---------------- //
@@ -526,6 +584,13 @@ bool Menu::confirmChoice() {
 
 void Menu::pressEnterToReturn() {
     cout << endl << "   Press ENTER to return...";
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+
+void Menu::pressEnterToContinue() {
+    cout << endl << "   Press ENTER to continue...";
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();

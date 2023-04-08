@@ -393,13 +393,15 @@ unsigned int Network::maxTrainsToStation(Station *station) {
     return most;
 }
 
-void Network::removeBidirectionalConnection(Station *source, Station *destination) {
+bool Network::removeBidirectionalConnection(Station *source, Station *destination) {
     for (auto connection : source->getConnections()) {
         if (connection->getDestination() == destination) {
             connection->getDestination()->removeConnection(destination);
             destination->removeConnection(connection->getDestination());
+            return true;
         }
     }
+    return false;
 }
 
 // ---------------------- Getters ---------------------- //

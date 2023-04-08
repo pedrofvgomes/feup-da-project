@@ -36,6 +36,7 @@ public:
     void setUpCustom();
     void setUpTrainPricesMenu();
     static std::pair<int,int> getUserTrainPrices();
+    void setUpSubRailway();
     /**
      * @brief Prints the Set Up Menu options to the terminal.
      *
@@ -82,13 +83,17 @@ public:
     static bool confirmChoice();
     inline static bool isStationOutputSafe(Station* stationptr);
     inline static void pressEnterToReturn();
-    inline static bool areStationLinked(Station* source, Station* destination);
+    inline static void pressEnterToContinue();
+
+    void randomGenerateRailway();
+    void removeConnectionsRailway();
 
 
 private:
 
     std::string dataPath;
     Network railway;
+    Network subrailway;
 
 };
 
