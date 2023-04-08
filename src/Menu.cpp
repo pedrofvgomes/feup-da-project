@@ -9,7 +9,6 @@ using namespace std;
 // -------------------- Constructor -------------------- //
 
 Menu::Menu() {
-    this->dataPath = "";
     setUpMenu();
 }
 
@@ -60,12 +59,11 @@ void Menu::setUpCustom() {
     do {
         if (input.back() != '/')
             input.push_back('/');
-        std::replace(input.begin(), input.end(), '\\', '/');
+        replace(input.begin(), input.end(), '\\', '/');
         ifstream testNetwork(input + "network.csv");
         ifstream testStations(input + "stations.csv");
         if (testStations.good() && testNetwork.good()) {
-            dataPath = input;
-            return;
+            dataPath = input; return;
         }
         cout << endl << "   Please enter a valid path: ";
         getline(cin >> ws, input);
@@ -270,20 +268,110 @@ void Menu::basicServiceMenuPrinter() {
          << "   Select your option : ";
 }
 
-void Menu::basicMaxFlow() { //TODO
+void Menu::basicMaxFlow() {
+    Station* source = receiveStation(true);
+    Station* destination = receiveStation(false);
+    unsigned int maxFlow = railway.edmondsKarp(source, destination);
 
+    system("clear || cls");
+    cout << endl
+         << "   | SEGMENT INFO |" << endl << endl;
+
+    if (isStationOutputSafe(source))
+        cout << "   SOURCE -> \"" << source->getName() << "\" station located in "
+             << source->getMunicipality() << ", " << source->getDistrict() << "." << endl << endl;
+    else
+        cout << "   SOURCE -> \"" << source->getName() << "\" station." << endl << endl;
+
+    if (isStationOutputSafe(destination))
+        cout << "   DESTINATION -> \"" << destination->getName() << "\" station located in "
+             << destination->getMunicipality() << ", " << destination->getDistrict() << "." << endl << endl;
+    else
+        cout << "   DESTINATION -> \"" << destination->getName() << "\" station." << endl << endl;
+
+    cout << "   The maximum number of trains that can simultaneously travel between this two specific stations is of " << maxFlow << "." << endl;
+
+    pressEnterToReturn();
+    basicServiceMenu();
+    return;
 }
 
-void Menu::basicMostBusy() { //TODO
+void Menu::basicMostBusy() {
+    int input;
+    auto stationList = railway.mostTrains();
 
+    system("clear || cls");
+    cout << endl
+         << "   | BUSIEST LINE SEGMENTS |" << endl << endl
+         << "   Please enter the number of pairs you wish to see : ";
+
+    while (!(cin >> input)) {
+        cout << endl << "   Please enter the number of pairs you wish to see : ";
+        cin.clear(); cin.ignore(10000, '\n');
+    }
+
+    auto it = stationList.begin();
+
+    system("clear || cls");
+    cout << endl << "   | BUSIEST LINE SEGMENTS |" << endl << endl;
+    while (it != stationList.end() && input != 0) {
+        cout << "   " << it->first << " - " << it->second << endl;
+        it++; input--;
+    }
+
+    pressEnterToReturn();
+    basicServiceMenu();
+    return;
 }
 
-void Menu::basicMostImportant() { //TODO
+void Menu::basicMostImportant() {
+    int input;
 
+    system("clear || cls");
+    cout << endl
+         << "   | TOP K DISTRICTS/MUNICIPALITIES |" << endl << endl
+         << "   Please enter the number of items you wish to see : ";
+
+    while (!(cin >> input)) {
+        cout << endl << "   Please enter the number of items you wish to see : ";
+        cin.clear(); cin.ignore(10000, '\n');
+    }
+
+    auto topDis = railway.topKDistricts(input);
+    auto topMun = railway.topKMunicipalities(input);
+
+    system("clear || cls");
+    cout << endl << "   | DISTRICTS |" << endl << endl;
+    for (auto p : topDis) { cout << "   " << p.second << " - " << p.first << endl; }
+
+    cout << endl << "   | MUNICIPALITIES |" << endl << endl;
+    for (auto p : topMun) { cout << "   " << p.second << " - " << p.first << endl; }
+
+    pressEnterToReturn();
+    basicServiceMenu();
+    return;
 }
 
-void Menu::basicMaxFlowIntireGrid() { //TODO
+void Menu::basicMaxFlowIntireGrid() {
+    Station* station = receiveStation(false);
+    unsigned int maxFlow = railway.maxTrainsToStation(station);
 
+    system("clear || cls");
+    cout << endl
+         << "   | STATION FLOW |" << endl << endl;
+
+    if (isStationOutputSafe(station))
+        cout << endl << "   You've selected the " << station->getName() << " station located in "
+             << station->getMunicipality() << ", " << station->getDistrict() << "." << endl;
+    else
+        cout << endl << "   You've selected the " << station->getName() << " station." << endl;
+
+    cout << "   Considering the entire grid, the maximum number of trains that can" << endl
+         << "   simultaneously travel between these two specific stations is of " << maxFlow << "." << endl;
+
+    pressEnterToReturn();
+    basicServiceMenu();
+    return;
 }
 
 // ----------------- Cost Optimization ----------------- //
@@ -379,12 +467,13 @@ Station* Menu::receiveStation(bool type) {
     Station* stationptr;
 
     system("clear || cls");
-    if (type)
-        cout << endl << "   -> SOURCE <-" << endl;
-    else
-        cout << endl << "   -> DESTINATION <-" << endl;
 
-    cout << endl << "   Please enter a valid station name : ";
+    if (type)
+        cout << endl << "   -> SOURCE <-" << endl
+             << endl << "   Please enter a valid station name : ";
+    else
+        cout << endl << "   -> DESTINATION <-" << endl
+             << endl << "   Please enter a valid station name : ";
 
     getline(cin >> ws, input);
 
@@ -433,6 +522,13 @@ bool Menu::confirmChoice() {
         }
     }
     while(true);
+}
+
+void Menu::pressEnterToReturn() {
+    cout << endl << "   Press ENTER to return...";
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
 }
 
 bool Menu::isStationOutputSafe(Station* stationptr) {

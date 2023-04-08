@@ -36,7 +36,7 @@ public:
     std::vector<std::pair<std::string, unsigned int>> topKDistricts(unsigned int k);
     std::vector<std::pair<std::string,std::string>> mostTrains();
     std::vector<Station *> BFS(Station *source);
-    unsigned int maxTrainsToStation(std::string station);
+    unsigned int maxTrainsToStation(Station* station);
     void removeBidirectionalConnection(Station *source, Station *destination);
 
 private:

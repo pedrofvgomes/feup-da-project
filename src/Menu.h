@@ -81,6 +81,8 @@ public:
     Station* receiveStation(bool type);
     static bool confirmChoice();
     inline static bool isStationOutputSafe(Station* stationptr);
+    inline static void pressEnterToReturn();
+    inline static bool areStationLinked(Station* source, Station* destination);
 
 
 private:

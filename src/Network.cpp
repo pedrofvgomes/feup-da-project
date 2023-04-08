@@ -7,6 +7,7 @@
 #include <iostream>
 #include <limits>
 #include <map>
+#include <unordered_map>
 
 using namespace std;
 
@@ -246,7 +247,6 @@ unsigned int Network::edmondsKarp(Station *source, Station *target) {
         maxFlow += connection->getFlow();
     }
 
-
     return maxFlow;
 }
 
@@ -369,10 +369,10 @@ std::vector<Station *> Network::BFS(Station *source) {
     return visited;
 }
 
-unsigned int Network::maxTrainsToStation(std::string station) {
+unsigned int Network::maxTrainsToStation(Station *station) {
 
     std::vector<Station *> tree;
-    tree = BFS(findStation(station));
+    tree = BFS(station);
 
     // Add the new SuperStation
     auto superStation = new Station("temp", "temp", "temp", "temp", "temp");
@@ -381,7 +381,7 @@ unsigned int Network::maxTrainsToStation(std::string station) {
         node->addBidirectionalConnection(superStation, INT_MAX, "temp");
     }
 
-    unsigned int most = edmondsKarp(superStation, findStation(station));
+    unsigned int most = edmondsKarp(superStation, station);
 
     // Removing the SuperStation
     for (auto connection : superStation->getConnections()) {
