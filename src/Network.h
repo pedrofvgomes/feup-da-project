@@ -38,6 +38,17 @@ public:
     std::vector<Station *> BFS(Station *source);
     unsigned int maxTrainsToStation(Station* station);
     bool removeBidirectionalConnection(Station *source, Station *destination);
+    /**
+     * @brief Creates the secondary railway removing random connections.
+     *
+     * Generates a random pair of directly linked stations and removes the connection between them.
+     * Repeats the algorithm for <b>n</b> times.
+     *
+     * @param n The number of connections to be removed.
+     *
+     * @return A boolean value informing of the operation success.
+     */
+    bool randomGenerateRailway(int n);
 
 private:
 

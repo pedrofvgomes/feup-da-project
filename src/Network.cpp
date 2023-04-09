@@ -7,6 +7,7 @@
 #include <iostream>
 #include <limits>
 #include <map>
+#include <random>
 #include <unordered_map>
 
 using namespace std;
@@ -402,6 +403,31 @@ bool Network::removeBidirectionalConnection(Station *source, Station *destinatio
         }
     }
     return false;
+}
+
+bool Network::randomGenerateRailway(int n) {
+    random_device rd;
+    mt19937 mt(rd());
+    uniform_int_distribution<int> src(0, stations.size());
+
+    int nSrc, nDst;
+    vector<int> numberList;
+    while (n != 0) {
+        do {
+            nSrc = src(mt);
+        } while (find(numberList.begin(), numberList.end(), nSrc) != numberList.end());
+        Station *source = stations[nSrc];
+
+        uniform_int_distribution<int> dst(0, source->getConnections().size());
+
+        nDst = dst(mt);
+        Station *destination = source->getConnections()[nDst]->getDestination();
+
+        if (removeBidirectionalConnection(source, destination)) { n--; }
+        else return false;
+    }
+
+    return true;
 }
 
 // ---------------------- Getters ---------------------- //
