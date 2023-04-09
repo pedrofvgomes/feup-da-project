@@ -321,7 +321,7 @@ void Menu::basicMaxFlow() {
 
     system("clear || cls");
     cout << endl
-         << "   | SEGMENT INFO |" << endl << endl;
+         << "   | MAX NUMBER OF TRAINS IN A SEGMENT |" << endl << endl;
 
     if (isStationOutputSafe(source))
         cout << "   SOURCE -> \"" << source->getName() << "\" station located in "
@@ -419,7 +419,7 @@ void Menu::basicMaxFlowIntireGrid() {
 // ----------------- Cost Optimization ----------------- //
 
 void Menu::costOptimizationMenu() { //TODO
-    costOptimizationMenuPrinter();
+
 }
 
 void Menu::costOptimizationMenuPrinter() { //TODO
@@ -428,7 +428,7 @@ void Menu::costOptimizationMenuPrinter() { //TODO
 
 // ------------------- Line Failures ------------------- //
 
-void Menu::lineFailuresMenu() { //TODO
+void Menu::lineFailuresMenu() {
     int input;
 
     lineFailuresMenuPrinter();
@@ -462,21 +462,45 @@ void Menu::lineFailuresMenu() { //TODO
     while(true);
 }
 
-void Menu::lineFailuresMenuPrinter() { //TODO
+void Menu::lineFailuresMenuPrinter() {
     system("clear || cls");
     cout << endl
          << "                            Reliability and Sensitivity to Line Failures" << endl
          << "   ---------------------------------------------------------------------" << endl
          << "   Please select your desired option by typing it on the selector intake" << endl << endl
-         << "     1. Flow of trains between two stations with reduced connectivity." << endl << endl
-         << "     2. Stations affected by a segment failure." << endl << endl << endl
+         << "     1. Max flow between two stations with reduced connectivity." << endl << endl
+         << "     2. Stations most affected by a segment failure." << endl << endl << endl
          << "     9. Return to Main Menu" << endl << endl
          << "     0. Exit application" << endl << endl
          << "   Select your option : ";
 }
 
-void Menu::failuresMaxFlow() { //TODO
+void Menu::failuresMaxFlow() {
+    Station* source = receiveStation(true);
+    Station* destination = receiveStation(false);
+    unsigned int maxFlow = subrailway.edmondsKarp(source, destination);
 
+    system("clear || cls");
+    cout << endl
+         << "   | MAX NUMBER OF TRAINS IN A SEGMENT - REDUCED CONNECTIVITY |" << endl << endl;
+
+    if (isStationOutputSafe(source))
+        cout << "   SOURCE -> \"" << source->getName() << "\" station located in "
+             << source->getMunicipality() << ", " << source->getDistrict() << "." << endl << endl;
+    else
+        cout << "   SOURCE -> \"" << source->getName() << "\" station." << endl << endl;
+
+    if (isStationOutputSafe(destination))
+        cout << "   DESTINATION -> \"" << destination->getName() << "\" station located in "
+             << destination->getMunicipality() << ", " << destination->getDistrict() << "." << endl << endl;
+    else
+        cout << "   DESTINATION -> \"" << destination->getName() << "\" station." << endl << endl;
+
+    cout << endl << "   Considering the segment failures, the maximum number of trains that can" << endl
+         << endl << "          simultaneously travel between these two specific stations is of " << maxFlow << "." << endl;
+
+    pressEnterToReturn();
+    lineFailuresMenu();
 }
 
 void Menu::failuresReport() { //TODO
@@ -485,8 +509,23 @@ void Menu::failuresReport() { //TODO
 
 // ----------------- Subrailway Manager ---------------- //
 
-void Menu::randomGenerateRailway() { //TODO
+void Menu::randomGenerateRailway() {
+    int n;
+    vector<int> numberList;
 
+    system("clear || cls");
+    cout << endl << "   | RANDOM GENERATOR |" << endl
+         << endl << "   Please enter the number of connections you wish to remove : ";
+
+    while (!(cin >> n)) {
+        cout << endl << "   Please enter the number of connections you wish to remove : ";
+        cin.clear(); cin.ignore(10000, '\n');
+    }
+
+    if (subrailway.randomGenerateRailway(n))
+        cout << endl << "   ! ALL CONNECTION SUCCESSFULLY REMOVED !" << endl;
+    else
+        cout << endl << "   ! ERROR !" << endl;
 }
 
 void Menu::removeConnectionsRailway() {
@@ -509,7 +548,6 @@ void Menu::removeConnectionsRailway() {
             cout << endl << "   ! Connection removed successfully !" << endl
                  << endl << "   SOURCE -> " << source->getName() << endl
                  << endl << "   DESTINATION -> " << destination->getName() << endl;
-            pressEnterToContinue();
         } else
             cout << endl << "   ! ERROR: STATIONS ARE NOT DIRECTLY CONNECTED !" << endl
                  << endl << "   SOURCE -> " << source->getName() << endl
