@@ -1,14 +1,10 @@
 #include "Network.h"
 
-#include <fstream>
-#include <iostream>
-#include <queue>
-#include <algorithm>
-#include <iostream>
-#include <limits>
 #include <map>
 #include <random>
-#include <unordered_map>
+#include <fstream>
+#include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -395,9 +391,9 @@ unsigned int Network::maxTrainsToStation(Station *station) {
 }
 
 bool Network::removeBidirectionalConnection(Station *source, Station *destination) {
-    for (auto connection : source->getConnections()) {
-        if (connection->getDestination() == destination) {
-            connection->getDestination()->removeConnection(destination);
+    for (auto connection : source->connections) {
+        if (connection->destination == destination) {
+            connection->destination->removeConnection(destination);
             destination->removeConnection(connection->getDestination());
             return true;
         }

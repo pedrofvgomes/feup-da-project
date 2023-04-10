@@ -11,6 +11,8 @@ class Connection;
  */
 class Station {
 public:
+    friend class Network;
+
     /**
      * @brief Constructor for the Station class.
      */
@@ -197,6 +199,8 @@ private:
  */
 class Connection {
 public:
+    friend class Network;
+
     /**
      * @brief Constructor for the Connection class.
      */

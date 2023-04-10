@@ -1,11 +1,8 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <iostream>
-#include <vector>
 #include <queue>
-#include <limits>
-#include <algorithm>
+#include <unordered_map>
 
 #include "StationConnection.h"
 
@@ -103,6 +100,8 @@ public:
      * @brief Creates the network from a file.
      *
      * @param path The path to the file containing the stations and connections.
+     *
+     * @note Time Complexity : O(n)
      */
     void createNetwork(const std::string &path);
 
@@ -112,6 +111,8 @@ public:
      * @param fileLocation The path to the file containing the stations.
      *
      * @return The number of stations read from the file.
+     *
+     * @note Time Complexity : O(n)
      */
     unsigned int readStations(const std::string &fileLocation);
 
@@ -121,6 +122,8 @@ public:
      * @param fileLocation The path to the file containing the connections.
      *
      * @return The number of connections read from the file.
+     *
+     * @note Time Complexity : O(n)
      */
     unsigned int readConnections(const std::string &fileLocation);
 
@@ -265,6 +268,8 @@ public:
      * @param source The name of the source station.
      *
      * @param destination The name of the destination station.
+     *
+     * @note Time Complexity : O(n)
      */
     bool removeBidirectionalConnection(Station *source, Station *destination);
 
@@ -277,6 +282,8 @@ public:
      * @param n The number of connections to be removed.
      *
      * @return A boolean value informing of the operation success.
+     *
+     * @note Time Complexity : O(n^2)
      */
     bool randomGenerateRailway(int n);
 
@@ -290,6 +297,8 @@ public:
     /**
      * @brief Implementation of the Dijkstra algorithm.
      * @param source A pointer to the source station.
+     *
+     * @note Time Complexity : O(n^2 * log(n))
      */
     void dijkstra(Station* source);
 
@@ -302,6 +311,8 @@ public:
      * @param target A pointer to the target station
      *
      * @return A pair with the maximum amount of trains and the respective cost for the company.
+     *
+     * @note Time Complexity : O(n^2 * log(n))
      */
     std::pair<unsigned int, unsigned int> maxFlowMinCost(Station* source, Station* target);
 
