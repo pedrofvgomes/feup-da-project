@@ -501,23 +501,41 @@ void Menu::failuresMaxFlow() {
     lineFailuresMenu();
 }
 
-void Menu::failuresReport() { //TODO
+void Menu::failuresReport() {
+    int input;
 
+    system("clear || cls");
+    cout << endl
+         << "   | TOP K STATIONS MOST AFFECTED |" << endl << endl
+         << "   Please enter the number of stations you wish to see : ";
+
+    while (!(cin >> input)) {
+        cout << endl << "   Please enter the number of items you wish to see : ";
+        cin.clear(); cin.ignore(10000, '\n');
+    }
+
+    vector<pair<string, unsigned int>> diff;
     auto railwayFlows = railway.maxFlowPerStation();
     auto subRailwayFlows = subrailway.maxFlowPerStation();
-    std::vector<std::pair<std::string, unsigned int>> diff;
 
     for (auto station1 : railwayFlows) {
         if (station1.second != subRailwayFlows[station1.first]) {
             diff.push_back(make_pair(station1.first->getName(), station1.second - subRailwayFlows[station1.first]));
         }
     }
+    sort(diff.begin(), diff.end(), sortByValue);
 
-    std::sort(diff.begin(), diff.end(), sortbysec);
-    for (int i = 0; i < k; i++) {
-        // Print top-k stations
+    auto it = diff.begin();
+
+    system("clear || cls");
+    cout << endl << "   | TOP K STATIONS MOST AFFECTED |" << endl << endl;
+    while (it != diff.end() && input != 0) {
+        cout << "   " << it->first << " - " << it->second << endl;
+        it++; input--;
     }
 
+    pressEnterToReturn();
+    lineFailuresMenu();
 }
 
 // ----------------- Subrailway Manager ---------------- //
@@ -650,7 +668,7 @@ bool Menu::isStationOutputSafe(Station* stationptr) {
     return !stationptr->getMunicipality().empty() && !stationptr->getDistrict().empty();
 }
 
-bool sortbysec(const pair<std::string, unsigned int> &a, const pair<std::string ,unsigned int> &b) {
+bool Menu::sortByValue(const pair<string, unsigned int> &a, const pair<string ,unsigned int> &b) {
     return (a.second > b.second);
 }
 

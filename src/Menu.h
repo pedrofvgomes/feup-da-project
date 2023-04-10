@@ -122,11 +122,6 @@ public:
      */
     void basicMaxFlowIntireGrid();
 
-    /**
-     * @brief
-     *
-     *
-     */
     void costOptimizationDisplay(); //TODO
 
     /**
@@ -150,11 +145,12 @@ public:
      */
     void failuresMaxFlow();
     /**
-     * @brief
+     * @brief Organizes the display of the Top K Stations Most Affected Functionality.
      *
-     *
+     * This function is responsible for handling the displaying of the requested information.
+     * Once a valid input is received, it calls the respective functions and displays the information in a user-friendly way.
      */
-    void failuresReport(); //TODO
+    void failuresReport();
 
     /**
      * @brief Creates the secondary railway removing random connections.
@@ -213,6 +209,18 @@ public:
      * @return True if the Station municipality and district aren't empty, False otherwise.
      */
     static bool isStationOutputSafe(Station* stationptr);
+    /**
+     * @brief Compare two pairs of string and unsigned int by value.
+     *
+     * This function is used for sorting pairs in descending order by their second value.
+     *
+     * @param a A reference to the first pair to be compared.
+     *
+     * @param b A reference to the second pair to be compared.
+     *
+     * @return True if the second value of pair a is greater than the second value of pair b, False otherwise.
+     */
+    static bool sortByValue(const std::pair<std::string, unsigned int> &a, const std::pair<std::string ,unsigned int> &b);
 
 private:
 
