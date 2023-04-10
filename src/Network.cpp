@@ -379,7 +379,7 @@ unsigned int Network::maxTrainsToStation(Station *station) {
     auto superStation = new Station("temp", "temp", "temp", "temp", "temp");
     stations.push_back(superStation);
     for (auto node : tree) {
-        node->addBidirectionalConnection(superStation, INT_MAX, "temp");
+        node->addBidirectionalConnection(superStation, INT_MAX, (string &) "temp");
     }
 
     unsigned int most = edmondsKarp(superStation, station);
@@ -443,6 +443,54 @@ std::unordered_map<Station *, unsigned int> Network::maxFlowPerStation() {
     }
 
     return flows;
+}
+
+bool comparevp(const Station* s1, const Station* s2){
+    return s1->getDist() < s2->getDist();
+}
+
+void Network::dijkstra(Station* source){
+    std::vector<Station*> q;
+
+    for(auto s : stations){
+        s->setPath(nullptr);
+
+        if(s==source) s->setDist(0);
+        else s->setDist(INT64_MAX);
+
+        s->setVisited(false);
+
+        q.push_back(s);
+    }
+
+    while(!q.empty()){
+        std::sort(q.begin(), q.end(), comparevp);
+        auto t = q.front();
+        q.erase(q.begin());
+        t->setVisited(true);
+
+        for(auto c:t->getConnections()){
+            int cost;
+            if(c->getService() == "STANDARD") cost = 2;
+            else cost = 4;
+            int temp = t->getDist() + cost;
+            c->setFlow(0);
+            if(temp < c->getDestination()->getDist()){
+                c->getDestination()->setDist(temp);
+                c->getDestination()->setPath(c);
+            }
+        }
+    }
+}
+
+std::pair<unsigned int, unsigned int> Network::maxFlowMinCost(Station* source, Station* target){
+    dijkstra(source);
+
+    int maxflow = findMinResidualAlongPath(source, target);
+
+    int cost = target->getDist();
+
+    return std::make_pair(maxflow, cost);
 }
 
 // ---------------------- Getters ---------------------- //
