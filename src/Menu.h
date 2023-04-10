@@ -122,7 +122,13 @@ public:
      */
     void basicMaxFlowIntireGrid();
 
-    void costOptimizationDisplay(); //TODO
+    /**
+     * @brief Organizes the display of the Max Number Of Trains With Min Cost Functionality.
+     *
+     * This function is responsible for handling the displaying of the minimum cost travel between 2 stations.
+     * Once a valid input is received, it calls the respective functions and displays the information in a user-friendly way.
+     */
+    void costOptimizationDisplay();
 
     /**
      * @brief Organizes the creation of the Reliability and Sensitivity to Line Failures Menu.

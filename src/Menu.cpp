@@ -420,8 +420,31 @@ void Menu::basicMaxFlowIntireGrid() {
 
 // ----------------- Cost Optimization ----------------- //
 
-void Menu::costOptimizationDisplay() { //TODO
+void Menu::costOptimizationDisplay() {
+    Station* source = receiveStation(true);
+    Station* destination = receiveStation(false);
+    auto minCosts = railway.maxFlowMinCost(source, destination);
 
+    system("clear || cls");
+    cout << endl
+         << "   | MAX NUMBER OF TRAINS WITH MIN COST |" << endl << endl;
+
+    if (isStationOutputSafe(source))
+        cout << "   SOURCE -> \"" << source->getName() << "\" station located in "
+             << source->getMunicipality() << ", " << source->getDistrict() << "." << endl << endl;
+    else
+        cout << "   SOURCE -> \"" << source->getName() << "\" station." << endl << endl;
+
+    if (isStationOutputSafe(destination))
+        cout << "   DESTINATION -> \"" << destination->getName() << "\" station located in "
+             << destination->getMunicipality() << ", " << destination->getDistrict() << "." << endl << endl;
+    else
+        cout << "   DESTINATION -> \"" << destination->getName() << "\" station." << endl << endl;
+
+    cout << "   The optimized number of trains that can simultaneously travel between this two specific stations is of " << minCosts.first << " having a cost of " << minCosts.second << "€." << endl;
+
+    pressEnterToReturn();
+    mainMenu(false);
 }
 
 // ------------------- Line Failures ------------------- //
