@@ -14,7 +14,7 @@ public:
     /**
      * @brief Constructor for the Station class.
      */
-    Station(std::string &name, std::string &district, std::string &municipality, std::string &township, std::string &line);
+    Station(const std::string &name, const std::string &district, const std::string &municipality, const std::string &township, const std::string &line);
 
     /**
      * @brief Getter method for the name field.
@@ -72,6 +72,13 @@ public:
     Connection *getPath() const;
 
     /**
+     * @brief Getter method for the dist field.
+     *
+     * @return An unsigned integer indicating the distance to the source station.
+     */
+    unsigned int getDist() const;
+
+    /**
      * @brief Setter method for the name field.
      *
      * @param name The new name of the station.
@@ -113,6 +120,12 @@ public:
      * @param path A pointer to the connection that was used to reach the station during a search.
      */
     void setPath(Connection *path);
+    /**
+     * @brief Setter method for the dist field.
+     *
+     * @param d An unsigned integer indicating the distance to the source station.
+     */
+     void setDist(unsigned int d);
     /**
      * @brief Sets the connections of the Station.
      *
@@ -175,6 +188,7 @@ private:
 
     bool visited = false;
     Connection *path = nullptr;
+    unsigned int dist;
 
 };
 

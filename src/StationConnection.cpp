@@ -4,7 +4,7 @@ using namespace std;
 
 // -------------------- Constructor -------------------- //
 
-Station::Station(string &name, string &district, string &municipality, string &township, string &line) {
+Station::Station(const string &name, const string &district, const string &municipality, const string &township, const string &line) {
     Station::name = name;
     Station::district = district;
     Station::municipality = municipality;
@@ -88,6 +88,10 @@ Connection *Station::getPath() const {
     return path;
 }
 
+unsigned int Station::getDist() const {
+    return dist;
+}
+
 // CONNECTION
 
 Station *Connection::getOrigin() const {
@@ -156,6 +160,10 @@ void Station::setVisited(bool visited) {
 
 void Station::setPath(Connection *path) {
     Station::path = path;
+}
+
+void Station::setDist(unsigned int d){
+    Station::dist = d;
 }
 
 // CONNECTION
