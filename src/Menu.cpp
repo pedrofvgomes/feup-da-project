@@ -87,11 +87,11 @@ void Menu::setUpTrainPricesMenu() {
                 return;
             case 1:
                 railway.setTrainPrices(pair<int,int>(2,4));
-                costOptimizationMenu();
+                costOptimizationDisplay();
                 return;
             case 2:
                 railway.setTrainPrices(getUserTrainPrices());
-                costOptimizationMenu();
+                costOptimizationDisplay();
                 return;
             default:
                 cout << endl << "   Please select a valid option: ";
@@ -144,10 +144,12 @@ void Menu::setUpSubRailway() {
                 lineFailuresMenu();
                 return;
             case 2:
+                subrailway = railway;
                 randomGenerateRailway();
                 lineFailuresMenu();
                 return;
             case 3:
+                subrailway = railway;
                 removeConnectionsRailway();
                 lineFailuresMenu();
                 return;
@@ -302,7 +304,7 @@ void Menu::basicServiceMenu() {
 void Menu::basicServiceMenuPrinter() {
     system("clear || cls");
     cout << endl
-         << "                                                   Basic Service Metrics" << endl
+         << "   Basic Service Metrics" << endl
          << "   ---------------------------------------------------------------------" << endl
          << "   Please select your desired option by typing it on the selector intake" << endl << endl
          << "     1. Max number of trains between two stations" << endl << endl
@@ -418,11 +420,7 @@ void Menu::basicMaxFlowIntireGrid() {
 
 // ----------------- Cost Optimization ----------------- //
 
-void Menu::costOptimizationMenu() { //TODO
-
-}
-
-void Menu::costOptimizationMenuPrinter() { //TODO
+void Menu::costOptimizationDisplay() { //TODO
 
 }
 
@@ -465,7 +463,7 @@ void Menu::lineFailuresMenu() {
 void Menu::lineFailuresMenuPrinter() {
     system("clear || cls");
     cout << endl
-         << "                            Reliability and Sensitivity to Line Failures" << endl
+         << "   Reliability and Sensitivity to Line Failures" << endl
          << "   ---------------------------------------------------------------------" << endl
          << "   Please select your desired option by typing it on the selector intake" << endl << endl
          << "     1. Max flow between two stations with reduced connectivity." << endl << endl
@@ -503,30 +501,47 @@ void Menu::failuresMaxFlow() {
     lineFailuresMenu();
 }
 
-void Menu::failuresReport() { //TODO
+void Menu::failuresReport() {
+    int input;
 
+    system("clear || cls");
+    cout << endl
+         << "   | TOP K STATIONS MOST AFFECTED |" << endl << endl
+         << "   Please enter the number of stations you wish to see : ";
+
+    while (!(cin >> input)) {
+        cout << endl << "   Please enter the number of items you wish to see : ";
+        cin.clear(); cin.ignore(10000, '\n');
+    }
+
+    vector<pair<string, unsigned int>> diff;
     auto railwayFlows = railway.maxFlowPerStation();
     auto subRailwayFlows = subrailway.maxFlowPerStation();
-    std::vector<std::pair<std::string, unsigned int>> diff;
 
     for (auto station1 : railwayFlows) {
         if (station1.second != subRailwayFlows[station1.first]) {
             diff.push_back(make_pair(station1.first->getName(), station1.second - subRailwayFlows[station1.first]));
         }
     }
+    sort(diff.begin(), diff.end(), sortByValue);
 
-    std::sort(diff.begin(), diff.end(), sortbysec);
-    for (int i = 0; i < k; i++) {
-        // Print top-k stations
+    auto it = diff.begin();
+
+    system("clear || cls");
+    cout << endl << "   | TOP K STATIONS MOST AFFECTED |" << endl << endl;
+    while (it != diff.end() && input != 0) {
+        cout << "   " << it->first << " - " << it->second << endl;
+        it++; input--;
     }
 
+    pressEnterToReturn();
+    lineFailuresMenu();
 }
 
 // ----------------- Subrailway Manager ---------------- //
 
 void Menu::randomGenerateRailway() {
     int n;
-    vector<int> numberList;
 
     system("clear || cls");
     cout << endl << "   | RANDOM GENERATOR |" << endl
@@ -653,7 +668,7 @@ bool Menu::isStationOutputSafe(Station* stationptr) {
     return !stationptr->getMunicipality().empty() && !stationptr->getDistrict().empty();
 }
 
-bool sortbysec(const pair<std::string, unsigned int> &a, const pair<std::string ,unsigned int> &b) {
+bool Menu::sortByValue(const pair<string, unsigned int> &a, const pair<string ,unsigned int> &b) {
     return (a.second > b.second);
 }
 

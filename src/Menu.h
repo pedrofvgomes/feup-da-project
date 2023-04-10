@@ -60,7 +60,7 @@ public:
      *
      * @param flag A boolean value that indicates the context in which this function is being called.
      */
-    inline static void setUpPrinter(int flag);
+    static void setUpPrinter(int flag);
 
     /**
      * @brief Organizes the creation of the Main Menu.
@@ -78,7 +78,7 @@ public:
      *
      * @param isLoading A boolean flag indicating if the program is starting or already running.
      */
-    inline static void mainMenuOptions(bool isLoading);
+    static void mainMenuOptions(bool isLoading);
 
     /**
      * @brief Organizes the creation of the Basic Service Metrics Menu.
@@ -92,7 +92,7 @@ public:
      *
      * This function prints the Basic Service Metrics Menu options on the terminal.
      */
-    inline static void basicServiceMenuPrinter();
+    static void basicServiceMenuPrinter();
     /**
      * @brief Organizes the display of the Max Number Of Trains In A Segment Functionality.
      *
@@ -122,8 +122,7 @@ public:
      */
     void basicMaxFlowIntireGrid();
 
-    void costOptimizationMenu(); //TODO
-    inline static void costOptimizationMenuPrinter(); //TODO
+    void costOptimizationDisplay(); //TODO
 
     /**
      * @brief Organizes the creation of the Reliability and Sensitivity to Line Failures Menu.
@@ -137,7 +136,7 @@ public:
      *
      * This function prints the Reliability and Sensitivity to Line Failures Menu options on the terminal.
      */
-    inline static void lineFailuresMenuPrinter();
+    static void lineFailuresMenuPrinter();
     /**
      * @brief Organizes the display of the Max Number Of Trains In A Segment - Reduced Connectivity Functionality.
      *
@@ -145,7 +144,13 @@ public:
      * Once a valid input is received, it calls the respective functions and displays the information in a user-friendly way.
      */
     void failuresMaxFlow();
-    void failuresReport(); //TODO
+    /**
+     * @brief Organizes the display of the Top K Stations Most Affected Functionality.
+     *
+     * This function is responsible for handling the displaying of the requested information.
+     * Once a valid input is received, it calls the respective functions and displays the information in a user-friendly way.
+     */
+    void failuresReport();
 
     /**
      * @brief Creates the secondary railway removing random connections.
@@ -187,13 +192,13 @@ public:
      *
      * This function prompts the user to press ENTER to advance the program's execution.
      */
-    inline static void pressEnterToReturn();
+    static void pressEnterToReturn();
     /**
      * @brief A simple function to prompt an action.
      *
      * This function prompts the user to press ENTER to advance the program's execution.
      */
-    inline static void pressEnterToContinue();
+    static void pressEnterToContinue();
     /**
      * @brief A simple function to check a Station's information.
      *
@@ -201,9 +206,21 @@ public:
      *
      * @param stationptr A pointer to the Station.
      *
-     * @return True if the Station contains all fields, False otherwise.
+     * @return True if the Station municipality and district aren't empty, False otherwise.
      */
-    inline static bool isStationOutputSafe(Station* stationptr);
+    static bool isStationOutputSafe(Station* stationptr);
+    /**
+     * @brief Compare two pairs of string and unsigned int by value.
+     *
+     * This function is used for sorting pairs in descending order by their second value.
+     *
+     * @param a A reference to the first pair to be compared.
+     *
+     * @param b A reference to the second pair to be compared.
+     *
+     * @return True if the second value of pair a is greater than the second value of pair b, False otherwise.
+     */
+    static bool sortByValue(const std::pair<std::string, unsigned int> &a, const std::pair<std::string ,unsigned int> &b);
 
 private:
 

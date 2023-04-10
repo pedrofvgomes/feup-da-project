@@ -1,44 +1,42 @@
 #include "StationConnection.h"
 
-#include <utility>
+using namespace std;
 
 // -------------------- Constructor -------------------- //
 
-Station::Station(std::string name, std::string district, std::string municipality, std::string township, std::string line) {
-    Station::name = std::move(name);
-    Station::district = std::move(district);
-    Station::municipality = std::move(municipality);
-    Station::township = std::move(township);
-    Station::line = std::move(line);
+Station::Station(string &name, string &district, string &municipality, string &township, string &line) {
+    Station::name = name;
+    Station::district = district;
+    Station::municipality = municipality;
+    Station::township = township;
+    Station::line = line;
 }
 
-
-Connection::Connection(Station *origin, Station *destination, unsigned int capacity, std::string service) {
+Connection::Connection(Station *origin, Station *destination, unsigned int capacity, string &service) {
     Connection::origin = origin;
     Connection::destination = destination;
     Connection::capacity = capacity;
-    Connection::service = std::move(service);
-    Connection::flow = 0;
+    Connection::service = service;
 }
 
-Connection *Station::addConnection(Station *destination, int capacity, std::string service) {
-    auto newConnection = new Connection(this, destination, capacity, std::move(service));
+// ---------------------- Methods ---------------------- //
+
+Connection* Station::addConnection(Station *destination, int capacity, string &service) {
+    auto newConnection = new Connection(this, destination, capacity, service);
     connections.push_back(newConnection);
     destination->incoming.push_back(newConnection);
     return newConnection;
 }
 
-void Station::addBidirectionalConnection(Station *destination, int capacity, const std::string& service) {
+void Station::addBidirectionalConnection(Station *destination, int capacity, string &service) {
     auto newConnection = addConnection(destination, capacity, service);
     destination->addConnection(newConnection->getOrigin(), capacity, service);
 }
 
 bool Station::removeConnection(Station *destination) {
-    // Remove connection
     for (auto it1 = connections.begin(); it1 != connections.end(); it1++) {
         if ((*it1)->getDestination() == destination) {
             connections.erase(it1);
-            // Remove incomming connection from destination
             for (auto it2 = destination->incoming.begin(); it2 != destination->incoming.end(); it2++) {
                 if ((*it2)->getOrigin()->getName() == name) {
                     destination->incoming.erase(it2);
@@ -51,28 +49,35 @@ bool Station::removeConnection(Station *destination) {
 }
 
 // ---------------------- Getters ---------------------- //
-std::string Station::getName() const {
+
+// STATION
+
+const string& Station::getName() const {
     return name;
 }
 
-std::string Station::getDistrict() const {
+const string& Station::getDistrict() const {
     return district;
 }
 
-std::string Station::getMunicipality() const {
+const string& Station::getMunicipality() const {
     return municipality;
 }
 
-std::string Station::getTownship() const {
+const string& Station::getTownship() const {
     return township;
 }
 
-std::string Station::getLine() const {
+const string& Station::getLine() const {
     return line;
 }
 
-std::vector<Connection *> Station::getConnections() const {
+const vector<Connection *>& Station::getConnections() const {
     return connections;
+}
+
+const vector<Connection *>& Station::getIncoming() const {
+    return incoming;
 }
 
 bool Station::isVisited() const {
@@ -83,9 +88,7 @@ Connection *Station::getPath() const {
     return path;
 }
 
-std::vector<Connection *> Station::getIncoming() const {
-    return incoming;
-}
+// CONNECTION
 
 Station *Connection::getOrigin() const {
     return origin;
@@ -99,7 +102,7 @@ unsigned int Connection::getCapacity() const {
     return capacity;
 }
 
-std::string Connection::getService() const {
+const string &Connection::getService() const {
     return service;
 }
 
@@ -115,26 +118,36 @@ Connection *Connection::getReverse() const {
     return reverse;
 }
 
-
 // ---------------------- Setters ---------------------- //
-void Station::setName(std::string& name) {
+
+// STATION
+
+void Station::setName(const string& name) {
     Station::name = name;
 }
 
-void Station::setDistrict(std::string& district) {
+void Station::setDistrict(const string& district) {
     Station::district = district;
 }
 
-void Station::setMunicipality(std::string& municipality) {
+void Station::setMunicipality(const string& municipality) {
     Station::municipality = municipality;
 }
 
-void Station::setTownship(std::string& township) {
+void Station::setTownship(const string& township) {
     Station::township = township;
 }
 
-void Station::setLine(std::string& line) {
+void Station::setLine(const string& line) {
     Station::line = line;
+}
+
+void Station::setConnections(const vector<Connection *> &connections) {
+    Station::connections = connections;
+}
+
+void Station::setIncoming(const vector<Connection *> &incoming) {
+    Station::incoming = incoming;
 }
 
 void Station::setVisited(bool visited) {
@@ -143,6 +156,24 @@ void Station::setVisited(bool visited) {
 
 void Station::setPath(Connection *path) {
     Station::path = path;
+}
+
+// CONNECTION
+
+void Connection::setOrigin(Station *origin) {
+    Connection::origin = origin;
+}
+
+void Connection::setDestination(Station *destination) {
+    Connection::destination = destination;
+}
+
+void Connection::setCapacity(unsigned int capacity) {
+    Connection::capacity = capacity;
+}
+
+void Connection::setService(const string &service) {
+    Connection::service = service;
 }
 
 void Connection::setFlow(unsigned int flow) {
@@ -156,4 +187,5 @@ void Connection::setSelected(bool selected) {
 void Connection::setReverse(Connection *reverse) {
     Connection::reverse = reverse;
 }
+
 // -------------------- END OF FILE -------------------- //
