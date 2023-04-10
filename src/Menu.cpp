@@ -87,11 +87,11 @@ void Menu::setUpTrainPricesMenu() {
                 return;
             case 1:
                 railway.setTrainPrices(pair<int,int>(2,4));
-                costOptimizationMenu();
+                costOptimizationDisplay();
                 return;
             case 2:
                 railway.setTrainPrices(getUserTrainPrices());
-                costOptimizationMenu();
+                costOptimizationDisplay();
                 return;
             default:
                 cout << endl << "   Please select a valid option: ";
@@ -144,10 +144,12 @@ void Menu::setUpSubRailway() {
                 lineFailuresMenu();
                 return;
             case 2:
+                subrailway = railway;
                 randomGenerateRailway();
                 lineFailuresMenu();
                 return;
             case 3:
+                subrailway = railway;
                 removeConnectionsRailway();
                 lineFailuresMenu();
                 return;
@@ -302,7 +304,7 @@ void Menu::basicServiceMenu() {
 void Menu::basicServiceMenuPrinter() {
     system("clear || cls");
     cout << endl
-         << "                                                   Basic Service Metrics" << endl
+         << "   Basic Service Metrics" << endl
          << "   ---------------------------------------------------------------------" << endl
          << "   Please select your desired option by typing it on the selector intake" << endl << endl
          << "     1. Max number of trains between two stations" << endl << endl
@@ -418,11 +420,7 @@ void Menu::basicMaxFlowIntireGrid() {
 
 // ----------------- Cost Optimization ----------------- //
 
-void Menu::costOptimizationMenu() { //TODO
-
-}
-
-void Menu::costOptimizationMenuPrinter() { //TODO
+void Menu::costOptimizationDisplay() { //TODO
 
 }
 
@@ -465,7 +463,7 @@ void Menu::lineFailuresMenu() {
 void Menu::lineFailuresMenuPrinter() {
     system("clear || cls");
     cout << endl
-         << "                            Reliability and Sensitivity to Line Failures" << endl
+         << "   Reliability and Sensitivity to Line Failures" << endl
          << "   ---------------------------------------------------------------------" << endl
          << "   Please select your desired option by typing it on the selector intake" << endl << endl
          << "     1. Max flow between two stations with reduced connectivity." << endl << endl
@@ -511,7 +509,6 @@ void Menu::failuresReport() { //TODO
 
 void Menu::randomGenerateRailway() {
     int n;
-    vector<int> numberList;
 
     system("clear || cls");
     cout << endl << "   | RANDOM GENERATOR |" << endl
