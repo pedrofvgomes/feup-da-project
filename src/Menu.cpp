@@ -653,4 +653,8 @@ bool Menu::isStationOutputSafe(Station* stationptr) {
     return !stationptr->getMunicipality().empty() && !stationptr->getDistrict().empty();
 }
 
+bool sortbysec(const pair<std::string, unsigned int> &a, const pair<std::string ,unsigned int> &b) {
+    return (a.second > b.second);
+}
+
 // -------------------- END OF FILE -------------------- //
