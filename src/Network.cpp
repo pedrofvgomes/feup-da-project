@@ -430,6 +430,21 @@ bool Network::randomGenerateRailway(int n) {
     return true;
 }
 
+std::unordered_map<Station *, unsigned int> Network::maxFlowPerStation() {
+    std::unordered_map<Station *, unsigned int> flows;
+
+    for (auto it1 = stations.begin(); it1 != stations.end(); it1++) {
+        unsigned int sum = 0;
+        for (auto it2 = it1 + 1; it2 != stations.end(); it2++) {
+            unsigned int flow = edmondsKarp(*it1, *it2);
+            sum += flow;
+        }
+        flows[*it1] = sum;
+    }
+
+    return flows;
+}
+
 // ---------------------- Getters ---------------------- //
 
 const std::pair<int, int> &Network::getTrainPrices() const {

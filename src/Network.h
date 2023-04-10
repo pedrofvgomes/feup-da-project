@@ -49,6 +49,7 @@ public:
      * @return A boolean value informing of the operation success.
      */
     bool randomGenerateRailway(int n);
+    std::unordered_map<Station *, unsigned int> maxFlowPerStation();
 
 private:
 
