@@ -505,6 +505,21 @@ void Menu::failuresMaxFlow() {
 
 void Menu::failuresReport() { //TODO
 
+    auto railwayFlows = railway.maxFlowPerStation();
+    auto subRailwayFlows = subrailway.maxFlowPerStation();
+    std::vector<std::pair<std::string, unsigned int>> diff;
+
+    for (auto station1 : railwayFlows) {
+        if (station1.second != subRailwayFlows[station1.first]) {
+            diff.push_back(make_pair(station1.first->getName(), station1.second - subRailwayFlows[station1.first]));
+        }
+    }
+
+    std::sort(diff.begin(), diff.end(), sortbysec);
+    for (int i = 0; i < k; i++) {
+        // Print top-k stations
+    }
+
 }
 
 // ----------------- Subrailway Manager ---------------- //
